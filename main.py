@@ -13,7 +13,7 @@ class MultipleRegression(Home):
 class TTest(Home):
     pass
 
-class ArimaModel:
+class ArimaModel(Home):
     pass
 
 class Help(Home):
