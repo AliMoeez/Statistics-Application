@@ -3,19 +3,16 @@ from sklearn import linear_model
 
 #mock_data
 
-df=pd.DataFrame({'x1':[100,101,105,107,110,115,125,187],
-                 'x2':[120,124,123,124,192,125,127,129],
-                 'y':[1,2,3,4,5,6,7,8]})
-
+df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_2 - Sheet1.csv")
 
 y=df["y"]
-x=df[["x1","x2"]]
+x=df[["x_1","x_2"]]
 
 #regression
 
 regression=linear_model.LinearRegression()
 
-reg=regression.fit(df[["x1","x2"]],df["y"])
+reg=regression.fit(x,y)
 
 print(reg.coef_)
 print(reg.intercept_)
