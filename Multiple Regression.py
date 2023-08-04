@@ -14,5 +14,5 @@ regression=linear_model.LinearRegression()
 
 reg=regression.fit(x,y)
 
-print(reg.coef_)
-print(reg.intercept_)
+print(reg.coef_, "Regression Coefficient")
+print(reg.intercept_,"Regression Intercept")
