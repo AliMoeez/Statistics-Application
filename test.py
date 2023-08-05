@@ -1,20 +1,12 @@
-import matplotlib.pyplot as plt, numpy as np, tkinter, pandas as pd
-from sklearn import linear_model
+import tkinter as tk
+from tkinter import filedialog
 
-class Home:
-    pass
+def UploadAction(event=None):
+    filename = filedialog.askopenfilename()
+    print('Selected:', filename)
 
-class LinearRegression(Home):
-    pass
+root = tk.Tk()
+button = tk.Button(root, text='Open', command=UploadAction)
+button.pack()
 
-class MultipleRegression(Home):
-    pass
-
-class TTest(Home):
-    pass
-
-class ArimaModel(Home):
-    pass
-
-class Help(Home):
-    pass
+root.mainloop()
