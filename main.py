@@ -12,12 +12,8 @@ file_label=""
 
 class Home:
     def __init__(self,file_label):
-        self.bg_colour="gray0" ; self.fg_colour="dodger blue" 
-
-        self.file_label=Label(SCREEN,text="You have uploaded PASS",bg="gray0",fg="gray0") 
-        self.file_label.configure(font=("Open Sans",10)) 
-        self.file_label.grid(column=1,row=3,ipady=20)
-
+        self.bg_colour="gray0" ; self.fg_colour="dodger blue"  ; self.file_label=Label(SCREEN,text="You have uploaded PASS",bg="gray0",fg="gray0") 
+        self.file_label.configure(font=("Open Sans",10))  ; self.file_label.grid(column=1,row=3,ipady=20)
         self.title_label=Label(SCREEN,text="Statistics Application",bg=self.bg_colour,fg=self.fg_colour)  ; self.title_label.configure(font=("Open Sans",30))
         self.instrution_label=Label(SCREEN,text="Upload Your CSV/XLSX Files Below To Begin!",bg=self.bg_colour,fg=self.fg_colour) ; self.instrution_label.configure(font=("Open Sans",20))
         self.label_1=Label(SCREEN,text="",bg=self.bg_colour,fg=self.fg_colour)
@@ -31,9 +27,18 @@ class Home:
         
     def data_organization(self):
         self.upload_button=Button(SCREEN,text="Open File",command=lambda:Home.file_upload(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=2)
-        self.file_text=self.file_label.cget("text")[17:]
+        self.file_text=self.file_label.cget("text")[18:]
         print(self.file_text)
-
+        try:
+            data=pd.read_csv(self.file_text)
+            print(data)
+        except: 
+            try:
+                data=pd.read_excel(self.file_text)
+                print(data)
+            except:
+                print("CANNOT DO")
+                
     def confirmation_button(self):
         self.upload_button=Button(SCREEN,text="Confirm File",command=lambda:Home.data_organization(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=4)
 

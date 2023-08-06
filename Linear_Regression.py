@@ -6,7 +6,7 @@ from sklearn import linear_model
 #df=pd.DataFrame({'x1':[100,101,105,107,110,115,125,187],
 #                 'y':[1,2,3,4,5,6,7,8]})
 
-df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_1 - Sheet1.csv")
+df=pd.read_csv(r"C:/Users/Owner/Downloads/Data_Set_1 - Sheet1.csv")
 
 y=df["y"]
 x=df["x"]
