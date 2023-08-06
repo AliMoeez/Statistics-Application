@@ -26,24 +26,21 @@ class Home:
         self.file=filedialog.askopenfilename(title="Upload CSV or XLSX Files",filetypes=(("CSV Files","*.csv"),("XLSX Files","*.xlxs")))
         self.file_label=Label(SCREEN,text=f"You have uploaded {self.file}",bg="gray0",fg="dodger blue") ; self.file_label.configure(font=("Open Sans",10)) ; self.file_label.grid(column=1,row=3,ipady=20)
 
-    def data_organization(self): 
-        self.data=lambda:Home.file_upload(self)
-
     def text(self):
         self.title_label.grid(column=1,row=0,ipady=50) ; self.label_1.grid(column=0,row=0,ipadx=170) ; self.instrution_label.grid(column=1,row=1,ipady=20)
         
-    def button(self):
+    def data_organization(self):
         self.upload_button=Button(SCREEN,text="Open File",command=lambda:Home.file_upload(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=2)
-        print(self.file_label.cget("text"))
+        self.file_text=self.file_label.cget("text")[17:]
+        print(self.file_text)
 
     def confirmation_button(self):
-        self.upload_button=Button(SCREEN,text="Confirm File",command=lambda:Home.button(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=4)
-        
+        self.upload_button=Button(SCREEN,text="Confirm File",command=lambda:Home.data_organization(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=4)
+
     
 home=Home(file_label)
 home.text()
-home.button()
-home.confirmation_button()
 home.data_organization()
+home.confirmation_button()
 
 SCREEN.mainloop()
