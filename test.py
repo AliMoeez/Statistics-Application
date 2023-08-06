@@ -1,12 +1,5 @@
-import tkinter as tk
-from tkinter import filedialog
+test=(r"C:/Users/Owner/Downloads/Data_Set_1 - Sheet1.csv")
 
-def UploadAction(event=None):
-    filename = filedialog.askopenfilename()
-    print('Selected:', filename)
+x=test.endswith(".csv")
 
-root = tk.Tk()
-button = tk.Button(root, text='Open', command=UploadAction)
-button.pack()
-
-root.mainloop()
+print(x)

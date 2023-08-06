@@ -29,16 +29,15 @@ class Home:
         self.upload_button=Button(SCREEN,text="Open File",command=lambda:Home.file_upload(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=2)
         self.file_text=self.file_label.cget("text")[18:]
         print(self.file_text)
-        try:
+        if self.file_text.endswith(".csv"):
             data=pd.read_csv(self.file_text)
             print(data)
-        except: 
-            try:
-                data=pd.read_excel(self.file_text)
-                print(data)
-            except:
-                print("CANNOT DO")
-                
+        if self.file_text.endswith(".xlsx"):
+            data=pd.read_excel(self.file_text)
+            print(data)
+        else : pass
+
+        
     def confirmation_button(self):
         self.upload_button=Button(SCREEN,text="Confirm File",command=lambda:Home.data_organization(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=4)
 
