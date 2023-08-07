@@ -1,5 +1,6 @@
-test=(r"C:/Users/Owner/Downloads/Data_Set_1 - Sheet1.csv")
+import pandas as pd 
 
-x=test.endswith(".csv")
+test=pd.read_csv(r"C:/Users/Owner/Downloads/Data_Set_1 - Sheet1.csv")
 
-print(x)
+for idx in test.columns:
+    print(idx)
