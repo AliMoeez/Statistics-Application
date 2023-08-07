@@ -25,7 +25,7 @@ class Home:
         self.title_label.grid(column=1,row=0,ipady=50) ; self.label_1.grid(column=0,row=0,ipadx=170) ; self.instrution_label.grid(column=1,row=1,ipady=20)
         
     def data_organization(self):
-        self.upload_button=Button(SCREEN,text="Open File",command=lambda:Home.file_upload(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=2,padx=40)
+        self.upload_button=Button(SCREEN,text="Open File",command=lambda:Home.file_upload(self),bg=self.bg_colour,fg=self.fg_colour) ; self.upload_button.grid(column=1,row=2)
         self.file_text=self.file_label.cget("text")[18:]
         if self.file_text.endswith(".csv"): self.data=pd.read_csv(self.file_text)
         if self.file_text.endswith(".xlsx"): self.data=pd.read_excel(self.file_text)
@@ -41,17 +41,18 @@ class Home:
         self.data_label.destroy() ; self.file_label.destroy()
     
     def data_clear_button(self):
-        self.clear_button=Button(SCREEN,text="Clear File",command=lambda:Home.data_clear(self),bg=self.bg_colour,fg=self.fg_colour) ; self.clear_button.grid(column=1,row=5,padx=0)
+        self.clear_button=Button(SCREEN,text="Clear File",command=lambda:Home.data_clear(self),bg=self.bg_colour,fg=self.fg_colour) ; self.clear_button.grid(column=1,row=5)
 
     def data_inputs(self):
-        entry_box_one=Entry(SCREEN) ; entry_box_one.config(bg=self.bg_colour,fg=self.fg_colour) ; entry_box_one.grid(column=1,row=8,sticky="W")
-        entry_box_two=Entry(SCREEN) ; entry_box_two.config(bg=self.bg_colour,fg=self.fg_colour) ; entry_box_two.grid(column=1,row=8,sticky="E")
+        entry_box_one=Entry(SCREEN) ; entry_box_one.config(bg=self.bg_colour,fg=self.fg_colour) ; entry_box_one.grid(column=1,row=9,sticky="W")
+        entry_box_two=Entry(SCREEN) ; entry_box_two.config(bg=self.bg_colour,fg=self.fg_colour) ; entry_box_two.grid(column=1,row=9,sticky="E")
 
     def test_type(self):
-        self.dropdown_test_options=["Linear Regression","Muliple Regression","T-Test","ARIMA"]
-        self.test_dropdown=OptionMenu(SCREEN,StringVar(SCREEN),*self.dropdown_test_options)
-        self.test_dropdown.grid(column=1,row=7)
-
+        self.test_label=Label(SCREEN,text="Choose The Test You Want To Use",bg=self.bg_colour,fg=self.fg_colour) ; self.test_label.grid(column=1,row=8,pady=20)
+        self.dropdown_test_options=["Linear Regression","Multiple Regression","T-Test","ARIMA"] ; self.string=StringVar()
+        self.test_dropdown=OptionMenu(SCREEN,self.string,*self.dropdown_test_options) ; self.test_dropdown.config(bg=self.bg_colour,fg=self.fg_colour) 
+        self.test_dropdown["menu"].config(bg=self.bg_colour,fg=self.fg_colour) ; self.test_dropdown.grid(column=1,row=9)
+        
 home=Home(file_label,data,data_label)
 home.text()
 home.data_organization()
