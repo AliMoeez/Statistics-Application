@@ -47,7 +47,6 @@ class Home:
         for idx,analysis_type in enumerate(self.dropdown_test_options_logic):
             if (self.file_text.endswith(".csv") or self.file_text.endswith(".xlsx")) and self.string.get()==self.dropdown_test_options_logic[idx][0]:
                 self.dropdown_test_options_logic[idx][1]=True
-                print(self.dropdown_test_options_logic[idx])
 
     def data_clear(self):
         self.data_label.destroy() ; self.file_label.destroy()
@@ -69,12 +68,21 @@ class Home:
 class LinearRegression(Home):
     def __init__(self):
         super().__init__(file_label,data,data_label,string,dropdown_test_options_logic) 
-        self.dropdown_test_options_logic=dropdown_test_options_logic   
+        self.dropdown_test_options_logic=dropdown_test_options_logic
 
     def next_step_window(self):
         if self.dropdown_test_options_logic[0][1]:
-            print("HERE")
+            SCREEN_POPUP=Tk() ; SCREEN_POPUP.geometry("500x200") ; SCREEN_POPUP.config(bg=self.bg_colour) ; SCREEN_POPUP.title("Linear Regression Settings") 
+            self.placeholder_text=Label(SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=50)
+            self.linereg_text=Label(SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.linereg_text.grid(column=1,row=0) ; self.linereg_text.configure(font=("Open Sans",18)) 
+            self.y_variables_label=Label(SCREEN_POPUP,text="Dependent Variable (Y)",bg=self.bg_colour,fg=self.fg_colour) ; self.y_variables_label.grid(column=1,row=1,sticky="w") ; self.y_variables_label.configure(font=("Open Sans",10)) 
+            self.x_variables_label=Label(SCREEN_POPUP,text="Independent Variable (X)",bg=self.bg_colour,fg=self.fg_colour) ; self.x_variables_label.grid(column=1,row=1,sticky="e") ; self.x_variables_label.configure(font=("Open Sans",10)) 
+            self.y_variables_entry=Entry(SCREEN_POPUP) ; self.y_variables_entry.grid(column=1,row=2,sticky="w") ; self.y_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.x_variables_entry=Entry(SCREEN_POPUP) ; self.x_variables_entry.grid(column=1,row=2,sticky="e") ; self.x_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
 
+
+    def run_test(self):
+        pass
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -86,5 +94,6 @@ home.next_step()
 
 linereg=LinearRegression()
 linereg.next_step_window()
+linereg.run_test()
 
 SCREEN.mainloop()
