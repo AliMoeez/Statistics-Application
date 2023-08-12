@@ -1,7 +1,10 @@
-dog=False
+import pandas as pd
 
-test=[[0,dog]]
+df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_1 - Sheet1.csv")
 
-test[0][1]=True
+col_one="y"
+col_two="x"
 
-print(test[0][1])
+for col in df:
+    if col in [col_one,col_two]:
+        print("yes")

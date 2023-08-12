@@ -83,6 +83,17 @@ class LinearRegression(Home):
             self.x_variables_entry=Entry(self.SCREEN_POPUP) ; self.x_variables_entry.grid(column=1,row=5) ; self.x_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
             self.alpha_level_entry=Entry(self.SCREEN_POPUP) ; self.alpha_level_entry.grid(column=1,row=7) ; self.alpha_level_entry.config(bg=self.bg_colour, fg=self.fg_colour)
     
+    def get_entry_values(self):
+        if self.dropdown_test_options_logic[0][1]:
+            for col in self.data:
+                try:
+                    if col in [self.y_variables_entry.get(),self.x_variables_entry.get()] and float(self.alpha_level_entry.get()):
+                        self.error_input_text.destroy()
+                    else:
+                        self.error_input_text=Label(self.SCREEN_POPUP,text="ERROR: Check Your Input Boxes For Invalid Inputs.",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
+                except Exception:
+                    self.error_input_text=Label(self.SCREEN_POPUP,text="ERROR: Check Your Input Boxes For Invalid Inputs.",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
+
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[0][1]:
             self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=70)
@@ -93,13 +104,12 @@ class LinearRegression(Home):
 
     def run(self):
         if self.dropdown_test_options_logic[0][1]:
-            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:LinearRegression.testing_window(self)) ; self.run_button.grid(column=1,row=8,pady=10)
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[LinearRegression.get_entry_values(self),LinearRegression.testing_window(self)]) ; self.run_button.grid(column=1,row=8,pady=10)
         
     def testing_window(self):
+        LinearRegression.get_entry_values(self)
         if self.dropdown_test_options_logic[0][1]:
           self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
-
-
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -113,6 +123,7 @@ linereg=LinearRegression()
 linereg.next_step_window()
 linereg.next_step_window_entries()
 linereg.next_step_window_labels()
+linereg.get_entry_values()
 linereg.run()
 linereg.testing_window()
 
