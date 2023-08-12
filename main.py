@@ -72,17 +72,34 @@ class LinearRegression(Home):
 
     def next_step_window(self):
         if self.dropdown_test_options_logic[0][1]:
-            SCREEN_POPUP=Tk() ; SCREEN_POPUP.geometry("500x200") ; SCREEN_POPUP.config(bg=self.bg_colour) ; SCREEN_POPUP.title("Linear Regression Settings") 
-            self.placeholder_text=Label(SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=50)
-            self.linereg_text=Label(SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.linereg_text.grid(column=1,row=0) ; self.linereg_text.configure(font=("Open Sans",18)) 
-            self.y_variables_label=Label(SCREEN_POPUP,text="Dependent Variable (Y)",bg=self.bg_colour,fg=self.fg_colour) ; self.y_variables_label.grid(column=1,row=1,sticky="w") ; self.y_variables_label.configure(font=("Open Sans",10)) 
-            self.x_variables_label=Label(SCREEN_POPUP,text="Independent Variable (X)",bg=self.bg_colour,fg=self.fg_colour) ; self.x_variables_label.grid(column=1,row=1,sticky="e") ; self.x_variables_label.configure(font=("Open Sans",10)) 
-            self.y_variables_entry=Entry(SCREEN_POPUP) ; self.y_variables_entry.grid(column=1,row=2,sticky="w") ; self.y_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
-            self.x_variables_entry=Entry(SCREEN_POPUP) ; self.x_variables_entry.grid(column=1,row=2,sticky="e") ; self.x_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x250") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("Linear Regression Settings") ; self.SCREEN_POPUP.resizable(False,False)
+            LinearRegression.next_step_window_entries(self)
+            LinearRegression.next_step_window_labels(self)
+            LinearRegression.run(self)
+
+    def next_step_window_entries(self):
+        if self.dropdown_test_options_logic[0][1]:
+            self.y_variables_entry=Entry(self.SCREEN_POPUP) ; self.y_variables_entry.grid(column=1,row=3) ; self.y_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.x_variables_entry=Entry(self.SCREEN_POPUP) ; self.x_variables_entry.grid(column=1,row=5) ; self.x_variables_entry.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.alpha_level_entry=Entry(self.SCREEN_POPUP) ; self.alpha_level_entry.grid(column=1,row=7) ; self.alpha_level_entry.config(bg=self.bg_colour, fg=self.fg_colour)
+    
+    def next_step_window_labels(self):
+        if self.dropdown_test_options_logic[0][1]:
+            self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=70)
+            self.linereg_text=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.linereg_text.grid(column=1,row=0) ; self.linereg_text.configure(font=("Open Sans",18)) 
+            self.y_variables_label=Label(self.SCREEN_POPUP,text="Dependent Variable (Y)",bg=self.bg_colour,fg=self.fg_colour) ; self.y_variables_label.grid(column=1,row=2) ; self.y_variables_label.configure(font=("Open Sans",10)) 
+            self.x_variables_label=Label(self.SCREEN_POPUP,text="Indepednet Variable (X)",bg=self.bg_colour,fg=self.fg_colour) ; self.x_variables_label.grid(column=1,row=4) ; self.x_variables_label.configure(font=("Open Sans",10)) 
+            self.alpha_level_label=Label(self.SCREEN_POPUP,text="Level of Significance (Alpha) (Optional)",bg=self.bg_colour,fg=self.fg_colour) ; self.alpha_level_label.grid(column=1,row=6) ; self.alpha_level_label.configure(font=("Open Sans",10)) 
+
+    def run(self):
+        if self.dropdown_test_options_logic[0][1]:
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:LinearRegression.testing_window(self)) ; self.run_button.grid(column=1,row=8,pady=10)
+        
+    def testing_window(self):
+        if self.dropdown_test_options_logic[0][1]:
+          self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
 
 
-    def run_test(self):
-        pass
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -94,6 +111,9 @@ home.next_step()
 
 linereg=LinearRegression()
 linereg.next_step_window()
-linereg.run_test()
+linereg.next_step_window_entries()
+linereg.next_step_window_labels()
+linereg.run()
+linereg.testing_window()
 
 SCREEN.mainloop()
