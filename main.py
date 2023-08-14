@@ -14,6 +14,8 @@ mult_reg_model=False
 ttest_model=False
 ARIMA_model=False
 
+show_linear_regression=False
+
 class Home:
     def __init__(self,file_label,data,data_label,string,dropdown_test_options_logic):
         self.bg_colour="gray0" ; self.fg_colour="dodger blue"  ; self.file_label=Label(SCREEN,text="You have uploaded PASS",bg="gray0",fg="gray0") 
@@ -84,15 +86,18 @@ class LinearRegression(Home):
             self.alpha_level_entry=Entry(self.SCREEN_POPUP) ; self.alpha_level_entry.grid(column=1,row=7) ; self.alpha_level_entry.config(bg=self.bg_colour, fg=self.fg_colour)
     
     def get_entry_values(self):
-        if self.dropdown_test_options_logic[0][1]:
+        global show_linear_regression
+        self.col_list=[0]
+        if self.dropdown_test_options_logic[0][1]:                        
+            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10))  ; show_linear_regression=False
             for col in self.data:
-                try:
-                    if col in [self.y_variables_entry.get(),self.x_variables_entry.get()] and float(self.alpha_level_entry.get()):
-                        self.error_input_text.destroy()
-                    else:
-                        self.error_input_text=Label(self.SCREEN_POPUP,text="ERROR: Check Your Input Boxes For Invalid Inputs.",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
-                except Exception:
-                    self.error_input_text=Label(self.SCREEN_POPUP,text="ERROR: Check Your Input Boxes For Invalid Inputs.",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
+                if col in [self.y_variables_entry.get(),self.x_variables_entry.get()]:
+                    self.col_list[0]+=1
+                if self.col_list[0]>=len([self.y_variables_entry.get(),self.x_variables_entry.get()]) and float(self.alpha_level_entry.get()):
+                    show_linear_regression=True ; self.error_input_text.configure(text="")
+                else:
+                    self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X,Alpha) For Invalid Inputs.")  ; show_linear_regression=False
+    
 
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[0][1]:
@@ -107,9 +112,16 @@ class LinearRegression(Home):
             self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[LinearRegression.get_entry_values(self),LinearRegression.testing_window(self)]) ; self.run_button.grid(column=1,row=8,pady=10)
         
     def testing_window(self):
+        global show_linear_regression
         LinearRegression.get_entry_values(self)
-        if self.dropdown_test_options_logic[0][1]:
+        if self.dropdown_test_options_logic[0][1] and show_linear_regression:
           self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
+        LinearRegression.testing_window_labels(self)
+
+    def testing_window_labels(self):
+        if self.dropdown_test_options_logic[0][1] and show_linear_regression:
+            self.blank_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=200)
+            self.title_label=Label(self.SCREEN_TEST,text="Linear Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.grid(column=1,row=0) ; self.title_label.configure(font=("Open Sans",25)) 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
