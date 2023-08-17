@@ -136,7 +136,6 @@ class LinearRegression(Home):
                 print(self.regression_ols.conf_int(0.05))
 
                 self.test_label=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
-                self.test_label.configure(font=("Open Sans",25))
                 self.test_label.grid(column=1,row=1)
 
             except Exception: pass
