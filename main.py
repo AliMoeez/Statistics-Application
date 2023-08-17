@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt, numpy as np, pandas as pd
 from sklearn import linear_model
+import statsmodels.api as sm
 from tkinter import *
 from tkinter import filedialog
 
@@ -97,6 +98,7 @@ class LinearRegression(Home):
                     show_linear_regression=True ; self.error_input_text.configure(text="")
                 else:
                     self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X,Alpha) For Invalid Inputs.")  ; show_linear_regression=False
+            LinearRegression.testing_statistics(self)
     
 
     def next_step_window_labels(self):
@@ -117,11 +119,28 @@ class LinearRegression(Home):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
           self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
         LinearRegression.testing_window_labels(self)
+        LinearRegression.testing_statistics(self)
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
             self.blank_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=200)
             self.title_label=Label(self.SCREEN_TEST,text="Linear Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.grid(column=1,row=0) ; self.title_label.configure(font=("Open Sans",25)) 
+
+    def testing_statistics(self):
+        if self.dropdown_test_options_logic[0][1] and show_linear_regression:
+            try:
+                self.dependent_variable=self.data[self.y_variables_entry.get()]
+                self.independent_variable=self.data[self.x_variables_entry.get()]
+
+                self.regression_ols=sm.OLS(self.dependent_variable,sm.add_constant(self.independent_variable)).fit()
+                print(self.regression_ols.conf_int(0.05))
+
+                self.test_label=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
+                self.test_label.configure(font=("Open Sans",25))
+                self.test_label.grid(column=1,row=1)
+
+            except Exception: pass
+
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
