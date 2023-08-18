@@ -130,29 +130,13 @@ class LinearRegression(Home):
 
     def testing_graph(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
-
             try:
-
-                self.dependent_variable=self.data[self.y_variables_entry.get()] 
-                self.independent_variable=self.data[self.x_variables_entry.get()]
-
-                self.figure=plt.Figure(figsize=(5,5),dpi=100) 
-                self.figure_plot=self.figure.add_subplot(111) 
-                self.figure.subplots_adjust(bottom=0.152)
-
-                self.regression=np.polyfit(self.independent_variable,self.dependent_variable,1)   
-                self.regression_plot=np.poly1d(self.regression)
-                
-                self.figure_plot.scatter(x=self.independent_variable,y=self.dependent_variable) 
-                self.figure_plot.plot(self.independent_variable,self.regression_plot(self.independent_variable))
-
-                self.regression_plot=FigureCanvasTkAgg(self.figure,self.SCREEN_TEST)
-                self.regression_plot.get_tk_widget().grid(column=1,row=1)
-
-                self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False)
-                self.toolbar.update()
-                self.toolbar.grid(column=1,row=1,sticky='s')
-
+                self.dependent_variable=self.data[self.y_variables_entry.get()]  ; self.independent_variable=self.data[self.x_variables_entry.get()]
+                self.figure=plt.Figure(figsize=(5,5),dpi=100)  ; self.figure_plot=self.figure.add_subplot(111)  ; self.figure.subplots_adjust(bottom=0.152)
+                self.regression=np.polyfit(self.independent_variable,self.dependent_variable,1) ; self.regression_plot=np.poly1d(self.regression)
+                self.figure_plot.scatter(x=self.independent_variable,y=self.dependent_variable)  ; self.figure_plot.plot(self.independent_variable,self.regression_plot(self.independent_variable))
+                self.regression_plot=FigureCanvasTkAgg(self.figure,self.SCREEN_TEST) ; self.regression_plot.get_tk_widget().grid(column=1,row=1)
+                self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False) ; self.toolbar.update() ; self.toolbar.grid(column=1,row=1,sticky='s')
             except KeyError : pass
 
     def testing_statistics(self):

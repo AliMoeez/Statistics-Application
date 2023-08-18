@@ -15,6 +15,11 @@ regression=np.polyfit(x,y,1)  #gets the intercept and slope
 regression_line=np.poly1d(regression) #equation written in slope intecept form
 regression_correlation=np.corrcoef(x,y) # correaltion coefficient
 
+print(regression)
+print(regression_line)
+
+print("")
+
 regression_ols=sm.OLS(y,sm.add_constant(x)).fit()
 
 regression_ci=regression_ols.conf_int(0.05)
