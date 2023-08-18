@@ -3,6 +3,7 @@ from sklearn import linear_model
 import statsmodels.api as sm
 from tkinter import *
 from tkinter import filedialog
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 SCREEN=Tk()
 
@@ -119,12 +120,40 @@ class LinearRegression(Home):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
           self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
         LinearRegression.testing_window_labels(self)
+        LinearRegression.testing_graph(self)
         LinearRegression.testing_statistics(self)
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
             self.blank_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=200)
             self.title_label=Label(self.SCREEN_TEST,text="Linear Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.grid(column=1,row=0) ; self.title_label.configure(font=("Open Sans",25)) 
+
+    def testing_graph(self):
+        if self.dropdown_test_options_logic[0][1] and show_linear_regression:
+
+            try:
+
+                self.dependent_variable=self.data[self.y_variables_entry.get()] 
+                self.independent_variable=self.data[self.x_variables_entry.get()]
+
+                self.figure=plt.Figure(figsize=(5,5),dpi=100) 
+                self.figure_plot=self.figure.add_subplot(111) 
+                self.figure.subplots_adjust(bottom=0.152)
+
+                self.regression=np.polyfit(self.independent_variable,self.dependent_variable,1)   
+                self.regression_plot=np.poly1d(self.regression)
+                
+                self.figure_plot.scatter(x=self.independent_variable,y=self.dependent_variable) 
+                self.figure_plot.plot(self.independent_variable,self.regression_plot(self.independent_variable))
+
+                self.regression_plot=FigureCanvasTkAgg(self.figure,self.SCREEN_TEST)
+                self.regression_plot.get_tk_widget().grid(column=1,row=1)
+
+                self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False)
+                self.toolbar.update()
+                self.toolbar.grid(column=1,row=1,sticky='s')
+
+            except KeyError : pass
 
     def testing_statistics(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
@@ -133,10 +162,9 @@ class LinearRegression(Home):
                 self.independent_variable=self.data[self.x_variables_entry.get()]
 
                 self.regression_ols=sm.OLS(self.dependent_variable,sm.add_constant(self.independent_variable)).fit()
-                print(self.regression_ols.conf_int(0.05))
 
                 self.test_label=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
-                self.test_label.grid(column=1,row=1)
+                self.test_label.grid(column=1,row=2)
 
             except Exception: pass
 
