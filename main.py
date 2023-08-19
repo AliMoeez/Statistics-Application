@@ -131,12 +131,20 @@ class LinearRegression(Home):
     def testing_graph(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
             try:
+                plt.style.use("dark_background") 
+
                 self.dependent_variable=self.data[self.y_variables_entry.get()]  ; self.independent_variable=self.data[self.x_variables_entry.get()]
-                self.figure=plt.Figure(figsize=(5,5),dpi=100)  ; self.figure_plot=self.figure.add_subplot(111)  ; self.figure.subplots_adjust(bottom=0.152)
+                self.figure=plt.Figure(figsize=(4,4),dpi=100)  ; self.figure_plot=self.figure.add_subplot(111)  ; self.figure.subplots_adjust(bottom=0.193)
+
+
                 self.regression=np.polyfit(self.independent_variable,self.dependent_variable,1) ; self.regression_plot=np.poly1d(self.regression)
                 self.figure_plot.scatter(x=self.independent_variable,y=self.dependent_variable)  ; self.figure_plot.plot(self.independent_variable,self.regression_plot(self.independent_variable))
+
                 self.regression_plot=FigureCanvasTkAgg(self.figure,self.SCREEN_TEST) ; self.regression_plot.get_tk_widget().grid(column=1,row=1)
-                self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False) ; self.toolbar.update() ; self.toolbar.grid(column=1,row=1,sticky='s')
+                self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False,) 
+                self.toolbar.update() 
+                self.toolbar.grid(column=1,row=1,sticky='s')
+                
             except KeyError : pass
 
     def testing_statistics(self):
@@ -145,12 +153,35 @@ class LinearRegression(Home):
                 self.dependent_variable=self.data[self.y_variables_entry.get()]
                 self.independent_variable=self.data[self.x_variables_entry.get()]
 
+                self.regression_coefficients=np.polyfit(self.independent_variable,self.dependent_variable,1)
+                self.regression_equation=np.poly1d(self.regression_coefficients)
                 self.regression_ols=sm.OLS(self.dependent_variable,sm.add_constant(self.independent_variable)).fit()
+                
+                self.regression_f_test=self.regression_ols.f_test([0,1]) ; dir(self.regression_f_test)
+                self.regression_f_value=self.regression_f_test.fvalue ; self.regression_p_value=self.regression_f_test.pvalue
 
-                self.test_label=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
-                self.test_label.grid(column=1,row=2)
+                self.regression_r_2=self.regression_ols.rsquared
+                self.regression_se=self.regression_ols.bse
+                self.regression_predict=self.regression_ols.predict()
 
-            except Exception: pass
+                self.regression_f_p_value_label=Label(self.SCREEN_TEST,text=f"F-Value: {round(self.regression_f_value,4)} -- p-value: {round(self.regression_p_value,4)}",bg=self.bg_colour,fg=self.fg_colour) 
+                self.regression_f_p_value_label.grid(column=1,row=2,pady=10) ; self.regression_f_p_value_label.configure(font=("Open Sans",12)) 
+                self.regression_equation_label=Label(self.SCREEN_TEST,text=f"Regression Equation: {str(self.regression_equation)}",bg=self.bg_colour,fg=self.fg_colour) 
+                self.regression_equation_label.grid(column=1,row=3) ; self.regression_equation_label.configure(font=("Open Sans",12)) 
+
+                self.regression_r_2_label=Label(self.SCREEN_TEST,text=f"R-Sqaured: {self.regression_r_2}",bg=self.bg_colour,fg=self.fg_colour)
+                self.regression_r_2_label.grid(column=1,row=4) ; self.regression_r_2_label.configure(font=("Open Sans",12)) 
+
+                self.regression_se_label=Label(self.SCREEN_TEST,text=f"Standard Error For Betas : {self.regression_se}",fg=self.fg_colour,bg=self.bg_colour)
+                self.regression_se_label.grid(column=1,row=5) ; self.regression_se_label.configure(font=("Open Sans",12)) 
+
+                self.test_ci_label=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
+                self.test_ci_label.grid(column=1,row=6) ; self.test_ci_label.configure(font=("Open Sans",12))
+
+                self.regression_predict_label=Label(self.SCREEN_TEST,text=f"Prediction Of Next Ten Values Of Y : {self.regression_predict}",fg=self.fg_colour,bg=self.bg_colour)
+                self.regression_predict_label.grid(column=1,row=7) ; self.regression_predict_label.configure(font=("Open Sans",8))
+
+            except AttributeError: pass
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
