@@ -34,11 +34,14 @@ regression_predict=regression_ols.predict()
 regression_f_test=regression_ols.f_test([0,1])
 dir(regression_f_test)
 
-#print(regression_ci)
+print(regression_ci)
+print(regression_ci[0])
+print(regression_ci[1])
+
 #print(regression_betas)
-print(regression_r_2)
-print(regression_se)
-print(regression_predict)
+#print(regression_r_2)
+#print(regression_se)
+#print(regression_predict)
 #print(regression_f_test.fvalue)
 #print(regression_f_test.pvalue)
 
