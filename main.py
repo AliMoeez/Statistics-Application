@@ -183,6 +183,14 @@ class LinearRegression(Home):
                 self.test_ci_label_values=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
                 self.test_ci_label_values.grid(column=1,row=9) ; self.test_ci_label_values.configure(font=("Open Sans",10))
                 
+                if self.regression_p_value<=0.05:
+                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {self.regression_p_value} <= 0.05, we can say that this model is a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour)
+                    self.conclusion_label.grid(column=1,row=10) ; self.conclusion_label.configure(font=("Open Sans",10))
+                
+                if self.regression_p_value>0.05:
+                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {round(self.regression_p_value,4)} > 0.05, we can say that this model is a not a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour)
+                    self.conclusion_label.grid(column=1,row=10) ; self.conclusion_label.configure(font=("Open Sans",10))
+
             except AttributeError: pass
 
 
