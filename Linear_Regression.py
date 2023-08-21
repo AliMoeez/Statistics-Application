@@ -52,6 +52,8 @@ list=[]
 for col in df:
     list.append(col)
 
+print(regression_ols.summary())
+
 print(round(regression_ols.pvalues[0:len(list)],4).to_string()  )
 
 #print(regression_line,"Regression Equation")
