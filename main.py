@@ -66,7 +66,7 @@ class Home:
         self.string.set(self.dropdown_test_options[0])
 
     def next_step(self):        
-        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self)]) 
+        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self),TTest.next_step_window(self)]) 
         self.next_button.grid(column=1,row=10,pady=20)
 
 class LinearRegression(Home):
@@ -106,7 +106,7 @@ class LinearRegression(Home):
             self.linereg_text=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.linereg_text.grid(column=1,row=0) ; self.linereg_text.configure(font=("Open Sans",18)) 
             self.y_variables_label=Label(self.SCREEN_POPUP,text="Dependent Variable (Y)",bg=self.bg_colour,fg=self.fg_colour) ; self.y_variables_label.grid(column=1,row=2) ; self.y_variables_label.configure(font=("Open Sans",10)) 
             self.x_variables_label=Label(self.SCREEN_POPUP,text="Indepednet Variable (X)",bg=self.bg_colour,fg=self.fg_colour) ; self.x_variables_label.grid(column=1,row=4) ; self.x_variables_label.configure(font=("Open Sans",10)) 
-            self.alpha_level_label=Label(self.SCREEN_POPUP,text="Level of Significance (Alpha) (Optional)",bg=self.bg_colour,fg=self.fg_colour) ; self.alpha_level_label.grid(column=1,row=6) ; self.alpha_level_label.configure(font=("Open Sans",10)) 
+            self.alpha_level_label=Label(self.SCREEN_POPUP,text="Level of Significance (Alpha)",bg=self.bg_colour,fg=self.fg_colour) ; self.alpha_level_label.grid(column=1,row=6) ; self.alpha_level_label.configure(font=("Open Sans",10)) 
 
     def run(self):
         if self.dropdown_test_options_logic[0][1]:
@@ -175,6 +175,33 @@ class LinearRegression(Home):
                     self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {round(self.regression_p_value,4)} > 0.05, we can say that this model is a not a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour) ; self.conclusion_label.grid(column=1,row=13) ; self.conclusion_label.configure(font=("Open Sans",10))
             except AttributeError: pass
 
+class TTest(Home):
+    def __init__(self):
+        super().__init__(file_label,data,data_label,string,dropdown_test_options_logic) 
+        self.dropdown_test_options_logic=dropdown_test_options_logic
+    
+    def next_step_window(self):
+        global ttest_model
+        if self.dropdown_test_options_logic[2][1]:
+            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x250") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("T-Test Settings") ; self.SCREEN_POPUP.resizable(False,False)
+            TTest.next_step_window_entries(self)
+            TTest.next_step_window_labels(self)
+
+    def next_step_window_entries(self):
+        if self.dropdown_test_options_logic[2][1]:
+            self.data_1_values=Entry(self.SCREEN_POPUP) ; self.data_1_values.grid(column=1,row=3) ; self.data_1_values.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.data_2_values=Entry(self.SCREEN_POPUP) ; self.data_2_values.grid(column=1,row=5) ; self.data_2_values.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.sided_values=Entry(self.SCREEN_POPUP) ; self.sided_values.grid(column=1,row=7) ; self.sided_values.config(bg=self.bg_colour, fg=self.fg_colour)
+
+    def next_step_window_labels(self):
+        if self.dropdown_test_options_logic[2][1]:
+            self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=70)
+            self.ttest_test=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.ttest_test.grid(column=1,row=0) ; self.ttest_test.configure(font=("Open Sans",18)) 
+            self.data_1_values_labels=Label(self.SCREEN_POPUP,text="Sample One",bg=self.bg_colour,fg=self.fg_colour) ; self.data_1_values_labels.grid(column=1,row=2) ; self.data_1_values_labels.configure(font=("Open Sans",10)) 
+            self.data_2_values_labels=Label(self.SCREEN_POPUP,text="Sample Two",bg=self.bg_colour,fg=self.fg_colour) ; self.data_2_values_labels.grid(column=1,row=4) ; self.data_2_values_labels.configure(font=("Open Sans",10)) 
+            self.sided_values_labels=Label(self.SCREEN_POPUP,text="Tails",bg=self.bg_colour,fg=self.fg_colour) ; self.sided_values_labels.grid(column=1,row=6) ; self.sided_values_labels.configure(font=("Open Sans",10)) 
+
+
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -191,5 +218,10 @@ linereg.next_step_window_labels()
 linereg.get_entry_values()
 linereg.run()
 linereg.testing_window()
+
+ttest=TTest()
+ttest.next_step_window()
+ttest.next_step_window_entries()
+ttest.next_step_window_labels()
 
 SCREEN.mainloop()
