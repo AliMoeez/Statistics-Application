@@ -195,13 +195,11 @@ class TTest(Home):
 
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[2][1]:
-            self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=70)
+            self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=30)
             self.ttest_test=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.ttest_test.grid(column=1,row=0) ; self.ttest_test.configure(font=("Open Sans",18)) 
             self.data_1_values_labels=Label(self.SCREEN_POPUP,text="Sample One",bg=self.bg_colour,fg=self.fg_colour) ; self.data_1_values_labels.grid(column=1,row=2) ; self.data_1_values_labels.configure(font=("Open Sans",10)) 
             self.data_2_values_labels=Label(self.SCREEN_POPUP,text="Sample Two",bg=self.bg_colour,fg=self.fg_colour) ; self.data_2_values_labels.grid(column=1,row=4) ; self.data_2_values_labels.configure(font=("Open Sans",10)) 
-            self.sided_values_labels=Label(self.SCREEN_POPUP,text="Tails",bg=self.bg_colour,fg=self.fg_colour) ; self.sided_values_labels.grid(column=1,row=6) ; self.sided_values_labels.configure(font=("Open Sans",10)) 
-
-
+            self.sided_values_labels=Label(self.SCREEN_POPUP,text="Tails (1= Two-Sided, 0= Sample One > Sample Two, -1= Sample One < Sample Two)",bg=self.bg_colour,fg=self.fg_colour) ; self.sided_values_labels.grid(column=1,row=6) ; self.sided_values_labels.configure(font=("Open Sans",10)) 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
