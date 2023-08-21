@@ -123,36 +123,18 @@ class LinearRegression(Home):
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
-            self.blank_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) 
-            
-            
-            self.blank_label.grid(column=0,row=0,padx=180)
-
-
-            self.title_label=Label(self.SCREEN_TEST,text="Linear Regression Output",fg=self.fg_colour,bg=self.bg_colour) 
-
-            self.regression_betas_f_p_value_label_title=Label(self.SCREEN_TEST,text=f"Regression Beta P-Values",bg=self.bg_colour,fg=self.fg_colour) 
-            self.regression_betas_f_p_value_label_title.grid(column=1,row=3) ; self.regression_betas_f_p_value_label_title.configure(font=("Open Sans",10,'bold')) 
-            
-            
-            self.title_label.grid(column=1,row=0) ; self.title_label.configure(font=("Open Sans",25)) 
-
-            self.test_ci_label=Label(self.SCREEN_TEST,text=f"95% Confidence Interval For Beta's",fg=self.fg_colour,bg=self.bg_colour)
-            
-            
-            self.test_ci_label.grid(column=1,row=11) 
-           
-           
-            self.test_ci_label.configure(font=("Open Sans",10,'bold'))
+            self.alpha_level=float(self.alpha_level_entry.get())
+            self.blank_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=180)
+            self.title_label=Label(self.SCREEN_TEST,text="Linear Regression Output",fg=self.fg_colour,bg=self.bg_colour) ;  self.title_label.grid(column=1,row=0) ; self.title_label.configure(font=("Open Sans",25))
+            self.regression_betas_f_p_value_label_title=Label(self.SCREEN_TEST,text=f"Regression Beta P-Values",bg=self.bg_colour,fg=self.fg_colour)  ; self.regression_betas_f_p_value_label_title.grid(column=1,row=3) ; self.regression_betas_f_p_value_label_title.configure(font=("Open Sans",10,'bold')) 
+            self.test_ci_label=Label(self.SCREEN_TEST,text=f"{round((1-self.alpha_level)*100,0)}% Confidence Interval For Beta's",fg=self.fg_colour,bg=self.bg_colour) ; self.test_ci_label.grid(column=1,row=11)  ; self.test_ci_label.configure(font=("Open Sans",10,'bold'))
 
     def testing_graph(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
             try:
                 plt.style.use("dark_background") 
-
                 self.dependent_variable=self.data[self.y_variables_entry.get()]  ; self.independent_variable=self.data[self.x_variables_entry.get()]
                 self.figure=plt.Figure(figsize=(5,4),dpi=100)  ; self.figure_plot=self.figure.add_subplot(111)  ; self.figure.subplots_adjust(bottom=0.193)
-
 
                 self.regression=np.polyfit(self.independent_variable,self.dependent_variable,1) ; self.regression_plot=np.poly1d(self.regression)
                 self.figure_plot.scatter(x=self.independent_variable,y=self.dependent_variable)  ; self.figure_plot.plot(self.independent_variable,self.regression_plot(self.independent_variable))
@@ -161,7 +143,6 @@ class LinearRegression(Home):
                 self.toolbar=NavigationToolbar2Tk(self.regression_plot,self.SCREEN_TEST,pack_toolbar=False,) 
                 self.toolbar.update() 
                 self.toolbar.grid(column=1,row=1,sticky='s')
-                
             except KeyError : pass
 
     def testing_statistics(self):
@@ -169,48 +150,29 @@ class LinearRegression(Home):
             try:
                 self.dependent_variable=self.data[self.y_variables_entry.get()]
                 self.independent_variable=self.data[self.x_variables_entry.get()]
-
+                self.alpha_level=float(self.alpha_level_entry.get())
                 self.list_length=[]
-
-                for col in self.data:
-                    self.list_length.append(col)
-
+                for col in self.data: self.list_length.append(col)
+                
                 self.regression_coefficients=np.polyfit(self.independent_variable,self.dependent_variable,1)
                 self.regression_equation=np.poly1d(self.regression_coefficients)
                 self.regression_ols=sm.OLS(self.dependent_variable,sm.add_constant(self.independent_variable)).fit()
-                
                 self.regression_f_test=self.regression_ols.f_test([0,1]) ; dir(self.regression_f_test)
                 self.regression_f_value=self.regression_f_test.fvalue ; self.regression_p_value=self.regression_f_test.pvalue
-
                 self.regression_r_2=self.regression_ols.rsquared
                 self.regression_se=self.regression_ols.bse
                 self.regression_predict=self.regression_ols.predict()
 
-
-                self.regression_f_p_value_label=Label(self.SCREEN_TEST,text=f"F-Value: {round(self.regression_f_value,4)} -- p-value: {round(self.regression_p_value,4)}",bg=self.bg_colour,fg=self.fg_colour) 
-                self.regression_f_p_value_label.grid(column=1,row=2,pady=10) ; self.regression_f_p_value_label.configure(font=("Open Sans",10,'bold')) 
-
-                self.regression_betas_f_p_value_label=Label(self.SCREEN_TEST,text=f"{self.regression_ols.pvalues[0:len(self.list_length)]}",bg=self.bg_colour,fg=self.fg_colour) 
-                self.regression_betas_f_p_value_label.grid(column=1,row=4) ; self.regression_betas_f_p_value_label.configure(font=("Open Sans",10)) #(1,4)
-                
-                self.regression_equation_label=Label(self.SCREEN_TEST,text=f"Regression Equation: {str(self.regression_equation)}",bg=self.bg_colour,fg=self.fg_colour) 
-                self.regression_equation_label.grid(column=1,row=6) ; self.regression_equation_label.configure(font=("Open Sans",10,'bold')) 
-
-                self.regression_r_2_label=Label(self.SCREEN_TEST,text=f"R-Sqaured: {round(self.regression_r_2,4)}",bg=self.bg_colour,fg=self.fg_colour)
-                self.regression_r_2_label.grid(column=1,row=7) ; self.regression_r_2_label.configure(font=("Open Sans",10,'bold')) 
-
-
-                self.test_ci_label_values=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(0.05),fg=self.fg_colour,bg=self.bg_colour)
-                self.test_ci_label_values.grid(column=1,row=12) ; self.test_ci_label_values.configure(font=("Open Sans",10))
+                self.regression_f_p_value_label=Label(self.SCREEN_TEST,text=f"F-Value: {round(self.regression_f_value,4)} -- p-value: {round(self.regression_p_value,4)}",bg=self.bg_colour,fg=self.fg_colour)  ; self.regression_f_p_value_label.grid(column=1,row=2,pady=10) ; self.regression_f_p_value_label.configure(font=("Open Sans",10,'bold')) 
+                self.regression_betas_f_p_value_label=Label(self.SCREEN_TEST,text=f"{self.regression_ols.pvalues[0:len(self.list_length)]}",bg=self.bg_colour,fg=self.fg_colour)  ; self.regression_betas_f_p_value_label.grid(column=1,row=4) ; self.regression_betas_f_p_value_label.configure(font=("Open Sans",10)) #(1,4)
+                self.regression_equation_label=Label(self.SCREEN_TEST,text=f"Regression Equation: {str(self.regression_equation)}",bg=self.bg_colour,fg=self.fg_colour) ; self.regression_equation_label.grid(column=1,row=6) ; self.regression_equation_label.configure(font=("Open Sans",10,'bold')) 
+                self.regression_r_2_label=Label(self.SCREEN_TEST,text=f"R-Sqaured: {round(self.regression_r_2,4)}",bg=self.bg_colour,fg=self.fg_colour) ; self.regression_r_2_label.grid(column=1,row=7) ; self.regression_r_2_label.configure(font=("Open Sans",10,'bold')) 
+                self.test_ci_label_values=Label(self.SCREEN_TEST,text=self.regression_ols.conf_int(1-self.alpha_level),fg=self.fg_colour,bg=self.bg_colour) ; self.test_ci_label_values.grid(column=1,row=12) ; self.test_ci_label_values.configure(font=("Open Sans",10))
                 
                 if self.regression_p_value<=0.05:
-                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {self.regression_p_value} <= 0.05, we can say that this model is a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour)
-                    self.conclusion_label.grid(column=1,row=13) ; self.conclusion_label.configure(font=("Open Sans",10))
-                
+                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {self.regression_p_value} <= 0.05, we can say that this model is a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour) ; self.conclusion_label.grid(column=1,row=13) ; self.conclusion_label.configure(font=("Open Sans",10))
                 if self.regression_p_value>0.05:
-                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {round(self.regression_p_value,4)} > 0.05, we can say that this model is a not a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour)
-                    self.conclusion_label.grid(column=1,row=13) ; self.conclusion_label.configure(font=("Open Sans",10))
-
+                    self.conclusion_label=Label(self.SCREEN_TEST,text=f"Since {round(self.regression_p_value,4)} > 0.05, we can say that this model is a not a good predictor of {self.y_variables_entry.get()}",fg=self.fg_colour,bg=self.bg_colour) ; self.conclusion_label.grid(column=1,row=13) ; self.conclusion_label.configure(font=("Open Sans",10))
             except AttributeError: pass
 
 
