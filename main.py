@@ -99,8 +99,6 @@ class LinearRegression(Home):
                     show_linear_regression=True ; self.error_input_text.configure(text="")
                 else:
                     self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X,Alpha) For Invalid Inputs.")  ; show_linear_regression=False
-            LinearRegression.testing_statistics(self)
-    
 
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[0][1]:
@@ -118,10 +116,10 @@ class LinearRegression(Home):
         global show_linear_regression
         LinearRegression.get_entry_values(self)
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
-          self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
-        LinearRegression.testing_window_labels(self)
-        LinearRegression.testing_graph(self)
-        LinearRegression.testing_statistics(self)
+            self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Linear Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
+            LinearRegression.testing_window_labels(self)
+            LinearRegression.testing_graph(self)
+            LinearRegression.testing_statistics(self)
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[0][1] and show_linear_regression:
