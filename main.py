@@ -184,7 +184,7 @@ class TTest(Home):
     def next_step_window(self):
         global ttest_model
         if self.dropdown_test_options_logic[2][1]:
-            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x250") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("T-Test Settings") ; self.SCREEN_POPUP.resizable(False,False)
+            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x300") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("T-Test Settings") ; self.SCREEN_POPUP.resizable(False,False)
             TTest.next_step_window_entries(self)
             TTest.next_step_window_labels(self)
             TTest.run(self)
@@ -206,10 +206,18 @@ class TTest(Home):
             self.test_type_labels=Label(self.SCREEN_POPUP,text="Test Type (1= Independent Sample, 0= Dependent Sample)",bg=self.bg_colour,fg=self.fg_colour) ; self.test_type_labels.grid(column=1,row=8) ; self.test_type_labels.configure(font=("Open Sans",10)) 
 
     def get_entry_values(self):
+        global show_ttest
         if self.dropdown_test_options_logic[2][1]:
+            self.col_list=[0]                     
+            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=11) ; self.error_input_text.configure(font=("Open Sans",10))  ; show_linear_regression=False
             for col in self.data:
-                print(col)
-
+                if col in [self.data_1_values.get(),self.data_2_values.get()]:
+                    self.col_list[0]+=1
+                if self.col_list[0]>=len([self.data_1_values.get(),self.data_2_values.get()]) and self.sided_values.get() in ["1","0","-1"] and self.test_type_values.get() in ["0","1"]:
+                    show_ttest=True ; self.error_input_text.configure(text="")
+                else:
+                    self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X,Alpha) For Invalid Inputs.")  ; show_ttest=False
+    
     def run(self):
         if self.dropdown_test_options_logic[2][1]:
             self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:TTest.get_entry_values(self)) ; self.run_button.grid(column=1,row=10,pady=10)
