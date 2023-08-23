@@ -17,6 +17,7 @@ ttest_model=False
 ARIMA_model=False
 
 show_linear_regression=False
+show_ttest=False
 
 class Home:
     def __init__(self,file_label,data,data_label,string,dropdown_test_options_logic):
@@ -186,20 +187,34 @@ class TTest(Home):
             self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x250") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("T-Test Settings") ; self.SCREEN_POPUP.resizable(False,False)
             TTest.next_step_window_entries(self)
             TTest.next_step_window_labels(self)
+            TTest.run(self)
 
     def next_step_window_entries(self):
         if self.dropdown_test_options_logic[2][1]:
             self.data_1_values=Entry(self.SCREEN_POPUP) ; self.data_1_values.grid(column=1,row=3) ; self.data_1_values.config(bg=self.bg_colour, fg=self.fg_colour)
             self.data_2_values=Entry(self.SCREEN_POPUP) ; self.data_2_values.grid(column=1,row=5) ; self.data_2_values.config(bg=self.bg_colour, fg=self.fg_colour)
             self.sided_values=Entry(self.SCREEN_POPUP) ; self.sided_values.grid(column=1,row=7) ; self.sided_values.config(bg=self.bg_colour, fg=self.fg_colour)
+            self.test_type_values=Entry(self.SCREEN_POPUP) ; self.test_type_values.grid(column=1,row=9) ; self.test_type_values.config(bg=self.bg_colour, fg=self.fg_colour)
 
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[2][1]:
             self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=30)
-            self.ttest_test=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.ttest_test.grid(column=1,row=0) ; self.ttest_test.configure(font=("Open Sans",18)) 
+            self.ttest_test=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.ttest_test.grid(column=1,row=0) ; self.ttest_test.configure(font=("Open Sans",15)) 
             self.data_1_values_labels=Label(self.SCREEN_POPUP,text="Sample One",bg=self.bg_colour,fg=self.fg_colour) ; self.data_1_values_labels.grid(column=1,row=2) ; self.data_1_values_labels.configure(font=("Open Sans",10)) 
             self.data_2_values_labels=Label(self.SCREEN_POPUP,text="Sample Two",bg=self.bg_colour,fg=self.fg_colour) ; self.data_2_values_labels.grid(column=1,row=4) ; self.data_2_values_labels.configure(font=("Open Sans",10)) 
             self.sided_values_labels=Label(self.SCREEN_POPUP,text="Tails (1= Two-Sided, 0= Sample One > Sample Two, -1= Sample One < Sample Two)",bg=self.bg_colour,fg=self.fg_colour) ; self.sided_values_labels.grid(column=1,row=6) ; self.sided_values_labels.configure(font=("Open Sans",10)) 
+            self.test_type_labels=Label(self.SCREEN_POPUP,text="Test Type (1= Independent Sample, 0= Dependent Sample)",bg=self.bg_colour,fg=self.fg_colour) ; self.test_type_labels.grid(column=1,row=8) ; self.test_type_labels.configure(font=("Open Sans",10)) 
+
+    def get_entry_values(self):
+        if self.dropdown_test_options_logic[2][1]:
+            for col in self.data:
+                print(col)
+
+    def run(self):
+        if self.dropdown_test_options_logic[2][1]:
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:TTest.get_entry_values(self)) ; self.run_button.grid(column=1,row=10,pady=10)
+
+
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -221,5 +236,7 @@ ttest=TTest()
 ttest.next_step_window()
 ttest.next_step_window_entries()
 ttest.next_step_window_labels()
+ttest.get_entry_values()
+ttest.run()
 
 SCREEN.mainloop()
