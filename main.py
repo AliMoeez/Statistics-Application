@@ -216,7 +216,7 @@ class TTest(Home):
                 if self.col_list[0]>=len([self.data_1_values.get(),self.data_2_values.get()]) and self.sided_values.get() in ["1","0","-1"] and self.test_type_values.get() in ["0","1"]:
                     show_ttest=True ; self.error_input_text.configure(text="")
                 else:
-                    self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X,Alpha) For Invalid Inputs.")  ; show_ttest=False
+                    self.error_input_text.configure(text="ERROR: Check Your Input Boxes For Invalid Inputs.")  ; show_ttest=False
     
     def run(self):
         if self.dropdown_test_options_logic[2][1]:
