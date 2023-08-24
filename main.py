@@ -232,13 +232,16 @@ class TTest(Home):
         
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[2][1]:
-            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=250)
+            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=185)
             self.title_label=Label(self.SCREEN_TEST,text="T-Test Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[2][1]:
+            plt.style.use("dark_background")
             self.figure_canvas=plt.Figure(figsize=(5,4),dpi=100)
             self.figure_plot=self.figure_canvas.add_subplot(111)
+            self.figure_canvas.subplots_adjust(bottom=0.18)
+            self.figure_canvas.subplots_adjust(top=1.00)
 
             self.sample_data_1=self.data[self.data_1_values.get()]
             self.sample_data_2=self.data[self.data_2_values.get()]
@@ -254,6 +257,10 @@ class TTest(Home):
 
             self.figure=FigureCanvasTkAgg(self.figure_canvas,self.SCREEN_TEST)
             self.figure.get_tk_widget().grid(column=1,row=1)
+
+            self.toolbar=NavigationToolbar2Tk(self.figure,self.SCREEN_TEST,pack_toolbar=False,)
+            self.toolbar.update()
+            self.toolbar.grid(column=1,row=1,sticky="s")
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
