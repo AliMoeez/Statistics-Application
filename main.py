@@ -220,8 +220,40 @@ class TTest(Home):
     
     def run(self):
         if self.dropdown_test_options_logic[2][1]:
-            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:TTest.get_entry_values(self)) ; self.run_button.grid(column=1,row=10,pady=10)
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[TTest.get_entry_values(self),TTest.testing_window(self)]) ; self.run_button.grid(column=1,row=10,pady=10)
 
+    def testing_window(self):
+        global show_ttest
+        TTest.get_entry_values(self)
+        if self.dropdown_test_options_logic[2][1] and show_ttest:
+            self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("T-Test Test Results") ; self.SCREEN_TEST.resizable(False,False)
+            TTest.testing_window_labels(self)
+            TTest.testing_window_graph(self)
+        
+    def testing_window_labels(self):
+        if self.dropdown_test_options_logic[2][1]:
+            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=250)
+            self.title_label=Label(self.SCREEN_TEST,text="T-Test Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
+
+    def testing_window_graph(self):
+        if self.dropdown_test_options_logic[2][1]:
+            self.figure_canvas=plt.Figure(figsize=(5,4),dpi=100)
+            self.figure_plot=self.figure_canvas.add_subplot(111)
+
+            self.sample_data_1=self.data[self.data_1_values.get()]
+            self.sample_data_2=self.data[self.data_2_values.get()]
+
+            self.sample_data_1_mean=np.mean(self.sample_data_1)
+            self.sample_data_2_mean=np.mean(self.sample_data_2)
+
+            self.sample_data_1_std=np.std(self.sample_data_1)
+            self.sample_data_2_std=np.std(self.sample_data_2)
+
+            self.figure_plot.bar(self.data_1_values.get(),self.sample_data_1_mean,yerr=self.sample_data_1_std,capsize=10)
+            self.figure_plot.bar(self.data_2_values.get(),self.sample_data_2_mean,yerr=self.sample_data_2_std,capsize=10)
+
+            self.figure=FigureCanvasTkAgg(self.figure_canvas,self.SCREEN_TEST)
+            self.figure.get_tk_widget().grid(column=1,row=1)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
@@ -246,5 +278,6 @@ ttest.next_step_window_entries()
 ttest.next_step_window_labels()
 ttest.get_entry_values()
 ttest.run()
+ttest.testing_window()
 
 SCREEN.mainloop()
