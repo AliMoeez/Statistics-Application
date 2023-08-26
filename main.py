@@ -4,6 +4,7 @@ import statsmodels.api as sm
 from tkinter import *
 from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+from scipy.stats import ttest_ind, ttest_rel
 
 SCREEN=Tk()
 
@@ -229,11 +230,32 @@ class TTest(Home):
             self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("T-Test Test Results") ; self.SCREEN_TEST.resizable(False,False)
             TTest.testing_window_labels(self)
             TTest.testing_window_graph(self)
+            TTest.testing_window_statistics(self)
         
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[2][1]:
+            TTest.sided_value_conversion(self)
             self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=185)
             self.title_label=Label(self.SCREEN_TEST,text="T-Test Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
+            
+            self.test_type_string=[""]
+            if self.test_type_values.get()=="1":
+                self.test_type_string[0]="Independent"
+            if self.test_type_values.get()=="0":
+                self.test_type_string[0]="Dependent"    
+
+            if self.sided_values.get()=="1":
+                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"{self.sided_list[0].title()} T-Test with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour)
+                self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2,pady=20) 
+            if self.sided_values.get() in ["0","-1"]:
+                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"T-Test where Sample One is {self.sided_list[0]} than Sample Two with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour)
+                self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2,pady=20)
+
+            self.null_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ho: \u03bc0=\u03bc1",fg=self.fg_colour,bg=self.bg_colour)
+            self.null_hypothesis_label.configure(font=("Open Sans",10)); self.null_hypothesis_label.grid(column=1,row=3) 
+
+            self.alternative_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ha: \u03bc0{self.sided_list_sign[0]}\u03bc1",fg=self.fg_colour,bg=self.bg_colour)
+            self.alternative_hypothesis_label.configure(font=("Open Sans",10)); self.alternative_hypothesis_label.grid(column=1,row=4) 
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[2][1]:
@@ -252,8 +274,8 @@ class TTest(Home):
             self.sample_data_1_std=np.std(self.sample_data_1)
             self.sample_data_2_std=np.std(self.sample_data_2)
 
-            self.figure_plot.bar(self.data_1_values.get(),self.sample_data_1_mean,yerr=self.sample_data_1_std,capsize=10)
-            self.figure_plot.bar(self.data_2_values.get(),self.sample_data_2_mean,yerr=self.sample_data_2_std,capsize=10)
+            self.figure_plot.bar(self.data_1_values.get(),self.sample_data_1_mean,yerr=self.sample_data_1_std,capsize=10,error_kw=dict(ecolor="grey"))
+            self.figure_plot.bar(self.data_2_values.get(),self.sample_data_2_mean,yerr=self.sample_data_2_std,capsize=10,error_kw=dict(ecolor="grey"))
 
             self.figure=FigureCanvasTkAgg(self.figure_canvas,self.SCREEN_TEST)
             self.figure.get_tk_widget().grid(column=1,row=1)
@@ -261,6 +283,37 @@ class TTest(Home):
             self.toolbar=NavigationToolbar2Tk(self.figure,self.SCREEN_TEST,pack_toolbar=False,)
             self.toolbar.update()
             self.toolbar.grid(column=1,row=1,sticky="s")
+
+    def sided_value_conversion(self):
+        ["1","0","-1"] # 1=Tw-sided , 0 =sample_1>sample_2 , -1=sample_1<sample_2
+        if self.dropdown_test_options_logic[2][1]:
+            self.sided_list=[""]
+            self.sided_list_sign=[""]
+            if self.sided_values.get()=="1":
+                self.sided_list[0]="two-sided"
+                self.sided_list_sign[0]="<>"
+            if self.sided_values.get()=="0":
+                self.sided_list[0]="greater"
+                self.sided_list_sign[0]=">"
+            if self.sided_values.get()=="-1":
+                self.sided_list[0]="less"
+                self.sided_list_sign[0]="<"
+
+    def testing_window_statistics(self):
+        TTest.sided_value_conversion(self)
+        if self.dropdown_test_options_logic[2][1]:
+            if self.test_type_values.get()=="1":#indepdent
+               self.t_test_stats=ttest_ind(self.sample_data_1,self.sample_data_2,alternative=self.sided_list[0])
+
+            if self.test_type_values.get()=="0":#depedent
+                self.t_test_stats=ttest_rel(self.sample_data_1,self.sample_data_1,alternative=self.sided_list[0]) 
+
+            
+
+
+
+            
+
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
