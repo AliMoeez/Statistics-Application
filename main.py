@@ -237,25 +237,15 @@ class TTest(Home):
             TTest.sided_value_conversion(self)
             self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=185)
             self.title_label=Label(self.SCREEN_TEST,text="T-Test Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
-            
             self.test_type_string=[""]
-            if self.test_type_values.get()=="1":
-                self.test_type_string[0]="Independent"
-            if self.test_type_values.get()=="0":
-                self.test_type_string[0]="Dependent"    
-
+            if self.test_type_values.get()=="1": self.test_type_string[0]="Independent"
+            if self.test_type_values.get()=="0": self.test_type_string[0]="Dependent"    
             if self.sided_values.get()=="1":
-                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"{self.sided_list[0].title()} T-Test with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour)
-                self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2,pady=20) 
+                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"{self.sided_list[0].title()} T-Test with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour) ; self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2) 
             if self.sided_values.get() in ["0","-1"]:
-                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"T-Test where Sample One is {self.sided_list[0]} than Sample Two with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour)
-                self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2,pady=20)
-
-            self.null_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ho: \u03bc0=\u03bc1",fg=self.fg_colour,bg=self.bg_colour)
-            self.null_hypothesis_label.configure(font=("Open Sans",10)); self.null_hypothesis_label.grid(column=1,row=3) 
-
-            self.alternative_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ha: \u03bc0{self.sided_list_sign[0]}\u03bc1",fg=self.fg_colour,bg=self.bg_colour)
-            self.alternative_hypothesis_label.configure(font=("Open Sans",10)); self.alternative_hypothesis_label.grid(column=1,row=4) 
+                self.test_explanation_label=Label(self.SCREEN_TEST,text=f"T-Test where Sample One is {self.sided_list[0]} than Sample Two with {self.test_type_string[0]} Samples",fg=self.fg_colour,bg=self.bg_colour) ; self.test_explanation_label.configure(font=("Open Sans",10)); self.test_explanation_label.grid(column=1,row=2)
+            self.null_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ho: \u03bc0=\u03bc1",fg=self.fg_colour,bg=self.bg_colour) ; self.null_hypothesis_label.configure(font=("Open Sans",10)); self.null_hypothesis_label.grid(column=1,row=3) 
+            self.alternative_hypothesis_label=Label(self.SCREEN_TEST,text=f"Ha: \u03bc0{self.sided_list_sign[0]}\u03bc1",fg=self.fg_colour,bg=self.bg_colour) ; self.alternative_hypothesis_label.configure(font=("Open Sans",10)); self.alternative_hypothesis_label.grid(column=1,row=4) 
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[2][1]:
