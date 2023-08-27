@@ -68,7 +68,7 @@ class Home:
         self.string.set(self.dropdown_test_options[0])
 
     def next_step(self):        
-        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self),TTest.next_step_window(self)]) 
+        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self),TTest.next_step_window(self),MultipleRegression.next_step_window(self)]) 
         self.next_button.grid(column=1,row=10,pady=20)
 
 class LinearRegression(Home):
@@ -300,13 +300,32 @@ class TTest(Home):
 
             self.summary_statistics_label_2=Label(self.SCREEN_TEST,text=f'Mean 2 = {round(self.sample_data_2_mean,2)} -- Std 2 = {round(self.sample_data_2_std,2)}',fg=self.fg_colour,bg=self.bg_colour)
             self.summary_statistics_label_2.configure(font=("Open Sans",10)) ; self.summary_statistics_label_2.grid(column=1,row=7)
-
+           
             if self.t_test_stats[1]>0.05:
                 self.test_conclusion_label=Label(self.SCREEN_TEST,text=f'Since p-value({round(self.t_test_stats[1],4)}) > 0.05, we can say that their is not a significant difference in the means',fg=self.fg_colour, bg=self.bg_colour)
                 self.test_conclusion_label.configure(font=("Open Sans",10,'bold')) ; self.test_conclusion_label.grid(column=1,row=8)
             if self.t_test_stats[1]<=0.05:
                 self.test_conclusion_label=Label(self.SCREEN_TEST,text=f'Since p-value({round(self.t_test_stats[1],4)}) <= 0.05, we can say that their is a significant difference in the means',fg=self.fg_colour, bg=self.bg_colour)
                 self.test_conclusion_label.configure(font=("Open Sans",10,'bold')) ; self.test_conclusion_label.grid(column=1,row=8)
+
+class MultipleRegression(Home):
+    def __init__(self):
+        super().__init__(file_label,data,data_label,string,dropdown_test_options_logic)
+        self.dropdown_test_options_logic=dropdown_test_options_logic
+
+    def next_step_window(self):
+        global mulreg_model
+        if self.dropdown_test_options_logic[1][1]:
+            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x300") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("Multiple Regression Settings") ; self.SCREEN_POPUP.resizable(False,False)
+
+    def next_step_window_labels(self):
+        if self.dropdown_test_options_logic[1][1]:
+            pass
+
+
+    def next_step_window_entries(self):
+        pass
+            
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
@@ -332,5 +351,7 @@ ttest.next_step_window_labels()
 ttest.get_entry_values()
 ttest.run()
 ttest.testing_window()
+
+mulreg=MultipleRegression()
 
 SCREEN.mainloop()
