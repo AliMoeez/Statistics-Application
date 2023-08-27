@@ -301,6 +301,14 @@ class TTest(Home):
             self.summary_statistics_label_2=Label(self.SCREEN_TEST,text=f'Mean 2 = {round(self.sample_data_2_mean,2)} -- Std 2 = {round(self.sample_data_2_std,2)}',fg=self.fg_colour,bg=self.bg_colour)
             self.summary_statistics_label_2.configure(font=("Open Sans",10)) ; self.summary_statistics_label_2.grid(column=1,row=7)
 
+            if self.t_test_stats[1]>0.05:
+                self.test_conclusion_label=Label(self.SCREEN_TEST,text=f'Since p-value({round(self.t_test_stats[1],4)}) > 0.05, we can say that their is not a significant difference in the means',fg=self.fg_colour, bg=self.bg_colour)
+                self.test_conclusion_label.configure(font=("Open Sans",10,'bold')) ; self.test_conclusion_label.grid(column=1,row=8)
+            if self.t_test_stats[1]<=0.05:
+                self.test_conclusion_label=Label(self.SCREEN_TEST,text=f'Since p-value({round(self.t_test_stats[1],4)}) <= 0.05, we can say that their is a significant difference in the means',fg=self.fg_colour, bg=self.bg_colour)
+                self.test_conclusion_label.configure(font=("Open Sans",10,'bold')) ; self.test_conclusion_label.grid(column=1,row=8)
+
+
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
 home.data_organization()
