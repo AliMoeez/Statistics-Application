@@ -1,11 +1,9 @@
-import statsmodels.api as sm
-import math
-import pandas as pd 
-
-
-df=pd.read_csv(r"C:/Users/Owner/Desktop/Data_Set_1 - Sheet1.csv")
-
-y=df["y"]
-x=df["x"]
-
-regression_ols=sm.OLS(y,sm.add_constant(x)).fit()
+from tkinter import *
+task_list=["Call","Work","Help"]
+root=Tk()
+Label(root,text="My Tasks").grid(row=0,column=0)
+placement=3
+for tasks in task_list:
+    Checkbutton(root,text=str(tasks)).grid(row=placement,column=0,sticky="w")
+    placement+=3
+root.mainloop()

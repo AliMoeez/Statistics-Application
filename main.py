@@ -317,16 +317,27 @@ class MultipleRegression(Home):
         global mulreg_model
         if self.dropdown_test_options_logic[1][1]:
             self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x300") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("Multiple Regression Settings") ; self.SCREEN_POPUP.resizable(False,False)
+            MultipleRegression.next_step_window_labels(self)
+            MultipleRegression.next_step_window_checkbox(self)
 
     def next_step_window_labels(self):
         if self.dropdown_test_options_logic[1][1]:
-            pass
+            self.placeholder_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.placeholder_text.grid(column=0,row=0,padx=100)
+            self.param_label=Label(self.SCREEN_POPUP,text="Enter Your Parameters Below",fg=self.fg_colour,bg=self.bg_colour) ; self.param_label.grid(column=1,row=1) ; self.param_label.configure(font=("Open Sans",18)) 
+            self.dep_label=Label(self.SCREEN_POPUP,text="Dependent Variable (Y)",fg=self.fg_colour,bg=self.bg_colour) ; self.dep_label.grid(column=1,row=2) ; self.dep_label.configure(font=("Open Sans",10)) 
+            self.ind_label=Label(self.SCREEN_POPUP,text="Independent Variables (X1,X2,..,Xn)",fg=self.fg_colour,bg=self.bg_colour) ; self.ind_label.grid(column=1,row=4) ; self.ind_label.configure(font=("Open Sans",10)) 
 
+    def next_step_window_checkbox(self):
+        if self.dropdown_test_options_logic[1][1]:
+            self.dependent_variable_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) 
+            self.dependent_variable_entry.grid(column=1,row=3)
+            self.placement=5
+            for variable in self.data:
+                self.ind_checkbox=Checkbutton(self.SCREEN_POPUP,variable,fg=self.fg_colour,bg=self.bg_colour).grid(column=1,row=self.placement)
+                self.placement+=1
+                
 
-    def next_step_window_entries(self):
-        pass
-            
-
+        
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
