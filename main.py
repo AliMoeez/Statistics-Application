@@ -277,34 +277,29 @@ class TTest(Home):
     def sided_value_conversion(self):
         ["1","0","-1"] # 1=Tw-sided , 0 =sample_1>sample_2 , -1=sample_1<sample_2
         if self.dropdown_test_options_logic[2][1]:
-            self.sided_list=[""]
-            self.sided_list_sign=[""]
+            self.sided_list=[""] ; self.sided_list_sign=[""]
             if self.sided_values.get()=="1":
-                self.sided_list[0]="two-sided"
-                self.sided_list_sign[0]="<>"
+                self.sided_list[0]="two-sided" ; self.sided_list_sign[0]="<>"
             if self.sided_values.get()=="0":
-                self.sided_list[0]="greater"
-                self.sided_list_sign[0]=">"
+                self.sided_list[0]="greater" ; self.sided_list_sign[0]=">"
             if self.sided_values.get()=="-1":
-                self.sided_list[0]="less"
-                self.sided_list_sign[0]="<"
+                self.sided_list[0]="less" ; self.sided_list_sign[0]="<"
 
     def testing_window_statistics(self):
         TTest.sided_value_conversion(self)
         if self.dropdown_test_options_logic[2][1]:
             if self.test_type_values.get()=="1":#indepdent
                self.t_test_stats=ttest_ind(self.sample_data_1,self.sample_data_2,alternative=self.sided_list[0])
-
             if self.test_type_values.get()=="0":#depedent
                 self.t_test_stats=ttest_rel(self.sample_data_1,self.sample_data_1,alternative=self.sided_list[0]) 
+            self.t_stat_label=Label(self.SCREEN_TEST,text=f'T-Statistic {round(self.t_test_stats[0],4)} -- p-value {round(self.t_test_stats[1],4)}',fg=self.fg_colour,bg=self.bg_colour)
+            self.t_stat_label.configure(font=("Open Sans",10,'bold')) ; self.t_stat_label.grid(column=1,row=5)
 
-            
+            self.summary_statistics_label_1=Label(self.SCREEN_TEST,text=f'Mean 1 = {round(self.sample_data_1_mean,2)} -- Std 1 = {round(self.sample_data_1_std,2)}',fg=self.fg_colour,bg=self.bg_colour)
+            self.summary_statistics_label_1.configure(font=("Open Sans",10)) ; self.summary_statistics_label_1.grid(column=1,row=6)
 
-
-
-            
-
-
+            self.summary_statistics_label_2=Label(self.SCREEN_TEST,text=f'Mean 2 = {round(self.sample_data_2_mean,2)} -- Std 2 = {round(self.sample_data_2_std,2)}',fg=self.fg_colour,bg=self.bg_colour)
+            self.summary_statistics_label_2.configure(font=("Open Sans",10)) ; self.summary_statistics_label_2.grid(column=1,row=7)
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
