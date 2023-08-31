@@ -332,35 +332,34 @@ class MultipleRegression(Home):
     def next_step_window_checkbox(self):
         if self.dropdown_test_options_logic[1][1]:
             self.dependent_variable_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour)  ; self.dependent_variable_entry.grid(column=1,row=3)
-            self.multiple_select=Listbox(self.SCREEN_POPUP,selectmode="multiple",fg=self.fg_colour,bg=self.bg_colour)
-            self.multiple_select.grid(column=1,row=5)
+            self.multiple_select=Listbox(self.SCREEN_POPUP,selectmode=MULTIPLE,fg=self.fg_colour,bg=self.bg_colour) ; self.multiple_select.grid(column=1,row=5)
             for idx,number in enumerate(self.data):
                 self.multiple_select.insert(END,number)
-            
-            
+
             self.alpha_level_label=Label(self.SCREEN_POPUP,text="Level Of Significance (Alpha)",fg=self.fg_colour,bg=self.bg_colour) ; self.alpha_level_label.grid(column=1,row=6) ; self.alpha_level_label.configure(font=("Open Sans",10)) 
             self.alpha_level_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.alpha_level_entry.grid(column=1,row=7)
 
     def get_entry_values(self):
         global show_multiple_regression
         if self.dropdown_test_options_logic[1][1]:
-            self.col_list=[0]                     
-            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
+            self.col_list=[0]                  
+            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",7)) 
+            self.x_value_list=[self.multiple_select.get(idx) for idx in self.multiple_select.curselection()]
             for col in self.data:
                 if col in [self.dependent_variable_entry.get()]:
                     self.col_list[0]+=1
-                if self.col_list[0]>=len([self.dependent_variable_entry.get()]) and self.sided_values.get() in ["1","0","-1"] and float(self.alpha_level_entry.get()):
-                    show_multiple_regression=True ; self.error_input_text.configure(text="")
-                else:
-                    self.error_input_text.configure(text="ERROR: Check Your Input Boxes For Invalid Inputs.")  ; show_multiple_regression=False
+                try:
+                    if self.col_list[0]>=len([self.dependent_variable_entry.get()]) and self.dependent_variable_entry.get() not in self.x_value_list and float(self.alpha_level_entry.get()):
+                        show_multiple_regression=True ; self.error_input_text.configure(text="")
+                    else:
+                        self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X1,...,Xn,Alpha) For Invalid Inputs.")  ; show_multiple_regression=False
+                except ValueError: pass
 
     def run(self):
         if self.dropdown_test_options_logic[1][1]:
-            self.run_button=Button(self.SCREEN_POPUP,text="Run",fg=self.fg_colour,bg=self.bg_colour,command=[MultipleRegression.get_entry_values(self)])
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[MultipleRegression.get_entry_values(self)])
             self.run_button.grid(column=1,row=8,pady=10)
 
-
-                 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
 home.data_organization()
@@ -386,5 +385,10 @@ ttest.run()
 ttest.testing_window()
 
 mulreg=MultipleRegression()
+mulreg.next_step_window()
+mulreg.next_step_window_checkbox()
+mulreg.next_step_window_labels()
+mulreg.get_entry_values()
+mulreg.run()
 
 SCREEN.mainloop()
