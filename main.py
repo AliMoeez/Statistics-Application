@@ -343,7 +343,7 @@ class MultipleRegression(Home):
         global show_multiple_regression
         if self.dropdown_test_options_logic[1][1]:
             self.col_list=[0]                  
-            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",7)) 
+            self.error_input_text=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.error_input_text.grid(column=1,row=9) ; self.error_input_text.configure(font=("Open Sans",10)) 
             self.x_value_list=[self.multiple_select.get(idx) for idx in self.multiple_select.curselection()]
             for col in self.data:
                 if col in [self.dependent_variable_entry.get()]:
@@ -352,13 +352,28 @@ class MultipleRegression(Home):
                     if self.col_list[0]>=len([self.dependent_variable_entry.get()]) and self.dependent_variable_entry.get() not in self.x_value_list and float(self.alpha_level_entry.get()):
                         show_multiple_regression=True ; self.error_input_text.configure(text="")
                     else:
-                        self.error_input_text.configure(text="ERROR: Check Your Input Boxes (Y,X1,...,Xn,Alpha) For Invalid Inputs.")  ; show_multiple_regression=False
+                        self.error_input_text.configure(text="ERROR: Check Your Y,X1,...,Xn,Alpha For Invalid Inputs.")  ; show_multiple_regression=False
                 except ValueError: pass
 
     def run(self):
         if self.dropdown_test_options_logic[1][1]:
-            self.run_button=Button(self.SCREEN_POPUP,text="Run",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[MultipleRegression.get_entry_values(self)])
+            self.run_button=Button(self.SCREEN_POPUP,text="Run",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[MultipleRegression.get_entry_values(self),MultipleRegression.testing_window(self)])
             self.run_button.grid(column=1,row=8,pady=10)
+
+    def testing_window(self):
+        global show_multiple_regression
+        if self.dropdown_test_options_logic[1][1] and show_multiple_regression:
+            self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Multiple Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
+            MultipleRegression.testing_window_labels(self)
+
+    def testing_window_labels(self):
+        if self.dropdown_test_options_logic[1][1]:
+            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=200)
+            self.title_label=Label(self.SCREEN_TEST,text="Multiple Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
+
+
+
+
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()

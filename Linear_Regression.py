@@ -42,19 +42,19 @@ dir(regression_f_test)
 #print(regression_r_2)
 #print(regression_se)
 #print(regression_predict)
-#print(regression_f_test.fvalue)
+print(regression_f_test.fvalue)
 
-#print(regression_ols.summary())
-#print(regression_f_test.pvalue)
+print(regression_ols.summary())
+print(regression_f_test.pvalue)
 
 list=[]
 
 for col in df:
     list.append(col)
 
-print(regression_ols.summary())
+#print(regression_ols.summary())
 
-print(round(regression_ols.pvalues[0:len(list)],4).to_string()  )
+print(round(regression_ols.pvalues[0:len(list)],4).to_string() )
 
 #print(regression_line,"Regression Equation")
 #print(regression_correlation[0][1],"Correlation of X and Y")
