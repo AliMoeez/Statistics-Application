@@ -365,15 +365,35 @@ class MultipleRegression(Home):
         if self.dropdown_test_options_logic[1][1] and show_multiple_regression:
             self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Multiple Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
             MultipleRegression.testing_window_labels(self)
+            MultipleRegression.testing_window_graph(self)
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[1][1]:
             self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=200)
             self.title_label=Label(self.SCREEN_TEST,text="Multiple Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
 
+    def testing_window_graph(self):
+        if self.dropdown_test_options_logic[1][1]:
+            plt.style.use("dark_background")
+            self.fig=plt.Figure(figsize=(5,4),dpi=100)
+            self.figure_regression=self.fig.add_subplot(111)
+            self.x_values_graph_list=[]
+            for col in  self.data:
+                if col!=self.dependent_variable_entry.get():
+                    self.x_values_graph_list.append(col)
+            for col in self.x_values_graph_list:
+                regression=np.polyfit(self.data[col],self.data[self.dependent_variable_entry.get()],1)
+                regression_line=np.poly1d(regression)
+                self.figure_regression.scatter(x=self.data[col],y=self.data[self.dependent_variable_entry.get()])
+                self.figure_regression.plot(self.data[col],regression_line(self.data[col]),label=col)  
+                self.figure_regression.legend(loc="upper center")
+                self.fig.suptitle("X1,..,Xn and Y Plotted") ; self.figure_regression.set_xlabel("X1,...,Xn") ; self.figure_regression.set_ylabel("Y") 
+            self.figure_regression=FigureCanvasTkAgg(self.fig,master=self.SCREEN_TEST)
+            self.figure_regression.get_tk_widget().grid(column=1,row=1)
+            self.toolbar=NavigationToolbar2Tk(self.figure_regression,self.SCREEN_TEST,pack_toolbar=False,)
+            self.toolbar.grid(column=1,row=2,pady=10)
 
-
-
+        
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
