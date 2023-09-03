@@ -21,26 +21,17 @@ print(reg.params)
 list_2=[]
 
 for i in reg.params:
-    list_2.append(str(i))
+    list_2.append(str(round(i,4)))
 
-print(list_2)
-
-print(type(list_2[1]))
 for i,y in enumerate(list_2):
-    if i==0:
-        list_2[i]=f"{y}"
+    if i==0: list_2[i]=f"{y}"
     if i>0:
-        if "-" in list_2[i]:
-            list_2[i]=f"{y} x{i}"
-        else:
-            list_2[i]=f"+{y} x{i}"
-
-
-print(list_2)
+        if "-" in list_2[i]: list_2[i]=f"{y} x{i}"
+        else: list_2[i]=f"+{y} x{i}"
 
 combine="  ".join(list_2)
 
-print(combine)
+print(f"y = {combine}")
 
 #print(reg.summary())
 
