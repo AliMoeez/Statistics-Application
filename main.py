@@ -366,11 +366,13 @@ class MultipleRegression(Home):
             self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Multiple Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
             MultipleRegression.testing_window_labels(self)
             MultipleRegression.testing_window_graph(self)
+            MultipleRegression.testing_statistics(self)
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[1][1]:
             self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=200)
             self.title_label=Label(self.SCREEN_TEST,text="Multiple Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
+            self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.grid(column=1,row=3)
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[1][1]:
@@ -378,7 +380,7 @@ class MultipleRegression(Home):
             self.fig=plt.Figure(figsize=(5,4),dpi=100)
             self.figure_regression=self.fig.add_subplot(111)
             self.x_values_graph_list=[]
-            for col in  self.data:
+            for col in self.data:
                 if col!=self.dependent_variable_entry.get():
                     self.x_values_graph_list.append(col)
             for col in self.x_values_graph_list:
@@ -392,6 +394,21 @@ class MultipleRegression(Home):
             self.figure_regression.get_tk_widget().grid(column=1,row=1)
             self.toolbar=NavigationToolbar2Tk(self.figure_regression,self.SCREEN_TEST,pack_toolbar=False,)
             self.toolbar.grid(column=1,row=2,pady=10)
+
+    def testing_statistics(self):
+        if self.dropdown_test_options_logic[1][1]:
+            self.regression_ols=sm.OLS(self.data[self.dependent_variable_entry.get()],sm.add_constant(self.data[self.x_values_graph_list])).fit()
+            self.identities=np.identity(len(self.regression_ols.params)) ; self.identities=self.identities[1:,:] ; self.reg_f_test=self.regression_ols.f_test(self.identities)    
+            dir(self.reg_f_test) ; self.f_value=self.reg_f_test.fvalue ; self.p_value=self.reg_f_test.pvalue
+            self.regression_f_p_values=Label(self.SCREEN_TEST,text=f"F-Value = {round(self.f_value,4)} -- p-value = {round(self.p_value,4)}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values.grid(column=1,row=4)
+            
+            
+
+
+
+
+
+            print(self.regression_ols.summary())
 
         
 

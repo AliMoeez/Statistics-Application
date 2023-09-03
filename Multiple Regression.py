@@ -16,6 +16,32 @@ x=df[["x_1","x_2"]]
 
 reg=sm.OLS(y,sm.add_constant(x)).fit()
 
+print(reg.params)
+
+list_2=[]
+
+for i in reg.params:
+    list_2.append(str(i))
+
+print(list_2)
+
+print(type(list_2[1]))
+for i,y in enumerate(list_2):
+    if i==0:
+        list_2[i]=f"{y}"
+    if i>0:
+        if "-" in list_2[i]:
+            list_2[i]=f"{y} x{i}"
+        else:
+            list_2[i]=f"+{y} x{i}"
+
+
+print(list_2)
+
+combine="  ".join(list_2)
+
+print(combine)
+
 #print(reg.summary())
 
 reg_ci=reg.conf_int(0.05)
@@ -49,19 +75,19 @@ reg_pvalue=reg.pvalues[0:len(list)].to_string()
 
 list_1=[]
 
-for col in df:
-    if col !="y":
-        list_1.append(col)
+#for col in df:
+#    if col !="y":
+#        list_1.append(col)
 
-for col in list_1:
-    regression=np.polyfit(df[col],df["y"],1)
-    regression_line=np.poly1d(regression)
-    plt.scatter(x=df[col],y=df["y"])
-    plt.plot(df[col],regression_line(df[col]),label=col)  
-    plt.legend(loc="upper center")
-    plt.title("X1,..,Xn and Y Plotted") ; plt.xlabel("X1,...,Xn") ; plt.ylabel("Y") 
+#for col in list_1:
+#    regression=np.polyfit(df[col],df["y"],1)
+#    regression_line=np.poly1d(regression)
+#    plt.scatter(x=df[col],y=df["y"])
+#    plt.plot(df[col],regression_line(df[col]),label=col)  
+#    plt.legend(loc="upper center")
+#    plt.title("X1,..,Xn and Y Plotted") ; plt.xlabel("X1,...,Xn") ; plt.ylabel("Y") 
 
-plt.show()
+#plt.show()
 
     
 
