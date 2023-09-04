@@ -16,7 +16,7 @@ x=df[["x_1","x_2"]]
 
 reg=sm.OLS(y,sm.add_constant(x)).fit()
 
-print(reg.params)
+#print(reg.params)
 
 list_2=[]
 
@@ -31,7 +31,7 @@ for i,y in enumerate(list_2):
 
 combine="  ".join(list_2)
 
-print(f"y = {combine}")
+#print(f"y = {combine}")
 
 #print(reg.summary())
 
@@ -55,14 +55,16 @@ dir(reg_f_test)
 #print(reg_f_test.fvalue)
 #print(reg_f_test.pvalue)
 
-list=[]
+list_3=[]
 
 for col in df:
-    list.append(col)
+    list_3.append(col)
 
-reg_pvalue=reg.pvalues[0:len(list)].to_string()
+reg_pvalue_name=round(reg.pvalues[0:len(list_3)],4).to_dict()
 
-#print(reg_pvalue)
+x=[str(i)+" : " + str(n) for i,n in reg_pvalue_name.items()]
+
+print(*x)
 
 list_1=[]
 

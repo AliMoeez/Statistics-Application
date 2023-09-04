@@ -372,12 +372,15 @@ class MultipleRegression(Home):
         if self.dropdown_test_options_logic[1][1]:
             self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=200)
             self.title_label=Label(self.SCREEN_TEST,text="Multiple Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
-            self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.grid(column=1,row=3)
+            self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.config(font=("Open Sans",10,'bold')) ; self.regression_f_p_values_label.grid(column=1,row=3) 
+            self.regression_equation_label=Label(self.SCREEN_TEST,text="Regression Equation",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_equation_label.config(font=("Open Sans",10,'bold')) ; self.regression_equation_label.grid(column=1,row=5) 
+            self.regression_beta_p_value_label=Label(self.SCREEN_TEST,text="Beta p-values",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_p_value_label.grid(column=1,row=7)
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[1][1]:
             plt.style.use("dark_background")
-            self.fig=plt.Figure(figsize=(5,4),dpi=100)
+            self.fig=plt.Figure(figsize=(5,3),dpi=100)
+            self.fig.subplots_adjust(bottom=0.14)
             self.figure_regression=self.fig.add_subplot(111)
             self.x_values_graph_list=[]
             for col in self.data:
@@ -400,16 +403,21 @@ class MultipleRegression(Home):
             self.regression_ols=sm.OLS(self.data[self.dependent_variable_entry.get()],sm.add_constant(self.data[self.x_values_graph_list])).fit()
             self.identities=np.identity(len(self.regression_ols.params)) ; self.identities=self.identities[1:,:] ; self.reg_f_test=self.regression_ols.f_test(self.identities)    
             dir(self.reg_f_test) ; self.f_value=self.reg_f_test.fvalue ; self.p_value=self.reg_f_test.pvalue
-            self.regression_f_p_values=Label(self.SCREEN_TEST,text=f"F-Value = {round(self.f_value,4)} -- p-value = {round(self.p_value,4)}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values.grid(column=1,row=4)
-            
-            
-
-
-
-
-
-            print(self.regression_ols.summary())
-
+            self.regression_f_p_values=Label(self.SCREEN_TEST,text=f"F-Value = {round(self.f_value,4)} -- p-value = {round(self.p_value,4)}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values.config(font=("Open Sans",10)) ; self.regression_f_p_values.grid(column=1,row=4)
+            self.reg_params=[] ; self.reg_p_value_list=[]
+            for idx in self.regression_ols.params: self.reg_params.append(str(round(idx,4)))
+            for idx,parameter in enumerate(self.reg_params):
+                if idx==0: self.reg_params[idx]=f"{parameter}"
+                if idx>0:
+                    if "-" in self.reg_params[idx]: self.reg_params[idx]=f"{parameter} x{idx}"
+                    else: self.reg_params[idx]=f"+{parameter} x{idx}"
+            self.combine_regression_equation=" ".join(self.reg_params)
+            self.regression_equation=Label(self.SCREEN_TEST,text=f"y = {self.combine_regression_equation}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_equation.config(font=("Open Sans",10)) ; self.regression_equation.grid(column=1,row=6)
+            for col in self.data:
+                self.reg_p_value_list.append(col)
+            self.reg_beta_p_values=round(self.regression_ols.pvalues[0:len(self.reg_p_value_list)],4).to_dict()
+            self.reg_p_value_beta=str(self.reg_beta_p_values)[1:-1]
+            self.regression_beta_p_value=Label(self.SCREEN_TEST,text=self.reg_p_value_beta,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value.config(font=("Open Sans",10)) ; self.regression_beta_p_value.grid(column=1,row=8)
         
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
