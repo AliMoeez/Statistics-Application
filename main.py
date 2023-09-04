@@ -375,6 +375,7 @@ class MultipleRegression(Home):
             self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.config(font=("Open Sans",10,'bold')) ; self.regression_f_p_values_label.grid(column=1,row=3) 
             self.regression_equation_label=Label(self.SCREEN_TEST,text="Regression Equation",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_equation_label.config(font=("Open Sans",10,'bold')) ; self.regression_equation_label.grid(column=1,row=5) 
             self.regression_beta_p_value_label=Label(self.SCREEN_TEST,text="Beta p-values",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_p_value_label.grid(column=1,row=7)
+            self.regression_beta_r_squared_label=Label(self.SCREEN_TEST,text="R Sqaured",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_r_squared_label.grid(column=1,row=9)
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[1][1]:
@@ -418,7 +419,8 @@ class MultipleRegression(Home):
             self.reg_beta_p_values=round(self.regression_ols.pvalues[0:len(self.reg_p_value_list)],4).to_dict()
             self.reg_p_value_beta=str(self.reg_beta_p_values)[1:-1]
             self.regression_beta_p_value=Label(self.SCREEN_TEST,text=self.reg_p_value_beta,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value.config(font=("Open Sans",10)) ; self.regression_beta_p_value.grid(column=1,row=8)
-        
+            self.reg_r_2=round(self.regression_ols.rsquared,4)
+            self.regression_beta_r_squared=Label(self.SCREEN_TEST,text=self.reg_r_2,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared.config(font=("Open Sans",10)) ; self.regression_beta_r_squared.grid(column=1,row=10)
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
