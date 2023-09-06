@@ -427,8 +427,15 @@ class MultipleRegression(Home):
             self.regression_beta_r_squared=Label(self.SCREEN_TEST,text=self.reg_r_2,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared.config(font=("Open Sans",10)) ; self.regression_beta_r_squared.grid(column=1,row=10)
             self.regression_se=str(round(self.regression_ols.bse,4).to_dict())[1:-1]
             self.regression_se_shown=Label(self.SCREEN_TEST,text=self.regression_se,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_se_shown.config(font=("Open Sans",10)) ; self.regression_se_shown.grid(column=1,row=12)
-            self.regression_confidcen_interval=str(round(self.regression_ols.conf_int(float(self.alpha_level_entry.get())),4).to_dict())[1:-1]
-            self.regression_confidcen_interval_statistics=Label(self.SCREEN_TEST,text=f"{self.regression_confidcen_interval}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_confidcen_interval_statistics.config(font=("Open Sans",10)) ; self.regression_confidcen_interval_statistics.grid(column=1,row=14)
+
+            self.regression_confidence_interval=self.regression_ols.conf_int(float(self.alpha_level_entry.get()))
+            self.regression_confidence_interval_list=round(self.regression_confidence_interval,4).values.tolist()
+            for idx in self.regression_confidence_interval_list:
+                idx.insert(0,self.reg_params[idx])
+            self.regression_confidence_interval_string=str(self.regression_confidence_interval_list)[1:-1]
+            self.regression_confidence_interval_string=self.regression_confidence_interval_string.replace("["," ")
+            self.regression_confidence_interval_string-self.regression_confidence_interval_string.replace("]"," ")
+            self.regression_confidcen_interval_statistics=Label(self.SCREEN_TEST,text=f"{self.regression_confidence_interval_string}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_confidcen_interval_statistics.config(font=("Open Sans",10)) ; self.regression_confidcen_interval_statistics.grid(column=1,row=14)
             self.durbin_watson_stat=round(st.durbin_watson(self.regression_ols.resid),4)
             self.durbin_watson_check=""
             if self.durbin_watson_stat<1.7: self.durbin_watson_check="Signs of Positive Serial Correlation In The Error Terms"

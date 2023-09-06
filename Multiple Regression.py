@@ -43,15 +43,17 @@ print(st.durbin_watson(reg.resid))
 reg_ci=reg.conf_int(0.05)
 
 #print(reg_ci)
-
 test=(round(reg_ci,4).values.tolist())
 
 for i in test:
     i.insert(0,"HERE")    
 
-print(test)
+test_2=str(test)[1:-1]
 
+test_2=test_2.replace("["," ")
+test_2=test_2.replace("]"," ")
 
+print(test_2)
 
 reg_ci_1=str(round(reg_ci,4).to_dict())[1:-1][1:-1]
 
