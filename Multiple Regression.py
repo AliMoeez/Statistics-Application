@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt, numpy as np, tkinter, pandas as pd
 from sklearn import linear_model
 import statsmodels.api as sm
+import statsmodels.stats.stattools as st
 import seaborn
 
 #mock_data
@@ -33,10 +34,28 @@ combine="  ".join(list_2)
 
 #print(f"y = {combine}")
 
+
+print(st.durbin_watson(reg.resid))
+
 #print(reg.summary())
 
+
 reg_ci=reg.conf_int(0.05)
-reg_betas=reg.params
+
+#print(reg_ci)
+
+test=(round(reg_ci,4).values.tolist())
+
+for i in test:
+    i.insert(0,"HERE")    
+
+print(test)
+
+
+
+reg_ci_1=str(round(reg_ci,4).to_dict())[1:-1][1:-1]
+
+"""reg_betas=reg.params
 reg_r_2=reg.rsquared
 reg_se=reg.bse
 reg_predict=reg.predict()
@@ -45,7 +64,13 @@ reg_predict=reg.predict()
 value=np.identity(len(reg.params))
 value=value[1:,:]
 reg_f_test=reg.f_test(value)
-dir(reg_f_test)
+dir(reg_f_test)"""
+
+
+"""reg_se_1=reg_se.to_dict()
+
+print(str(reg_se_1)[1:-1])"""
+
 
 #print(reg_ci.to_string())
 #print(reg_betas.to_string())
@@ -55,7 +80,8 @@ dir(reg_f_test)
 #print(reg_f_test.fvalue)
 #print(reg_f_test.pvalue)
 
-list_3=[]
+
+"""list_3=[]
 
 for col in df:
     list_3.append(col)
@@ -66,7 +92,7 @@ x=[str(i)+" : " + str(n) for i,n in reg_pvalue_name.items()]
 
 print(*x)
 
-list_1=[]
+list_1=[]"""
 
 #for col in df:
 #    if col !="y":

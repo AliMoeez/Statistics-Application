@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt, numpy as np, pandas as pd
 from sklearn import linear_model
 import statsmodels.api as sm
+import statsmodels.stats.stattools as st
 from tkinter import *
 from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
@@ -363,7 +364,7 @@ class MultipleRegression(Home):
     def testing_window(self):
         global show_multiple_regression
         if self.dropdown_test_options_logic[1][1] and show_multiple_regression:
-            self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x800") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Multiple Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
+            self.SCREEN_TEST=Tk() ; self.SCREEN_TEST.geometry("1200x900") ; self.SCREEN_TEST.config(bg="gray0") ; self.SCREEN_TEST.title("Multiple Regression Test Results") ; self.SCREEN_TEST.resizable(False,False)
             MultipleRegression.testing_window_labels(self)
             MultipleRegression.testing_window_graph(self)
             MultipleRegression.testing_statistics(self)
@@ -375,7 +376,10 @@ class MultipleRegression(Home):
             self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.config(font=("Open Sans",10,'bold')) ; self.regression_f_p_values_label.grid(column=1,row=3) 
             self.regression_equation_label=Label(self.SCREEN_TEST,text="Regression Equation",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_equation_label.config(font=("Open Sans",10,'bold')) ; self.regression_equation_label.grid(column=1,row=5) 
             self.regression_beta_p_value_label=Label(self.SCREEN_TEST,text="Beta p-values",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_p_value_label.grid(column=1,row=7)
-            self.regression_beta_r_squared_label=Label(self.SCREEN_TEST,text="R Sqaured",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_r_squared_label.grid(column=1,row=9)
+            self.regression_beta_r_squared_label=Label(self.SCREEN_TEST,text="Adjusted R Sqaured",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared_label.config(font=("Open Sans",10,'bold')) ; self.regression_beta_r_squared_label.grid(column=1,row=9)
+            self.regression_se_label=Label(self.SCREEN_TEST,text="Standard Error of Betas",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_se_label.config(font=("Open Sans",10,'bold')); self.regression_se_label.grid(column=1,row=11)
+            self.durbin_watson_test_statistic_label=Label(self.SCREEN_TEST,text="Regression Beta's Confidence Interval",fg=self.fg_colour,bg=self.bg_colour) ; self.durbin_watson_test_statistic_label.config(font=("Open Sans",10,'bold')); self.durbin_watson_test_statistic_label.grid(column=1,row=13)
+            self.regression_beta_confidence_interval_label=Label(self.SCREEN_TEST,text="Durbin Watson Test Statistic",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_confidence_interval_label.config(font=("Open Sans",10,'bold')); self.regression_beta_confidence_interval_label.grid(column=1,row=15)
 
     def testing_window_graph(self):
         if self.dropdown_test_options_logic[1][1]:
@@ -419,8 +423,18 @@ class MultipleRegression(Home):
             self.reg_beta_p_values=round(self.regression_ols.pvalues[0:len(self.reg_p_value_list)],4).to_dict()
             self.reg_p_value_beta=str(self.reg_beta_p_values)[1:-1]
             self.regression_beta_p_value=Label(self.SCREEN_TEST,text=self.reg_p_value_beta,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_p_value.config(font=("Open Sans",10)) ; self.regression_beta_p_value.grid(column=1,row=8)
-            self.reg_r_2=round(self.regression_ols.rsquared,4)
+            self.reg_r_2=round(self.regression_ols.rsquared_adj,4)
             self.regression_beta_r_squared=Label(self.SCREEN_TEST,text=self.reg_r_2,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared.config(font=("Open Sans",10)) ; self.regression_beta_r_squared.grid(column=1,row=10)
+            self.regression_se=str(round(self.regression_ols.bse,4).to_dict())[1:-1]
+            self.regression_se_shown=Label(self.SCREEN_TEST,text=self.regression_se,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_se_shown.config(font=("Open Sans",10)) ; self.regression_se_shown.grid(column=1,row=12)
+            self.regression_confidcen_interval=str(round(self.regression_ols.conf_int(float(self.alpha_level_entry.get())),4).to_dict())[1:-1]
+            self.regression_confidcen_interval_statistics=Label(self.SCREEN_TEST,text=f"{self.regression_confidcen_interval}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_confidcen_interval_statistics.config(font=("Open Sans",10)) ; self.regression_confidcen_interval_statistics.grid(column=1,row=14)
+            self.durbin_watson_stat=round(st.durbin_watson(self.regression_ols.resid),4)
+            self.durbin_watson_check=""
+            if self.durbin_watson_stat<1.7: self.durbin_watson_check="Signs of Positive Serial Correlation In The Error Terms"
+            elif self.durbin_watson_stat>2.3: self.durbin_watson_check="Signs of Negative Serial Correlation In The Error Terms"
+            else: self.durbin_watson_check="No Signs of Serial Correlation In The Error Terms"
+            self.durbin_watson_test_statistic=Label(self.SCREEN_TEST,text=f"{self.durbin_watson_stat} -- {self.durbin_watson_check}",fg=self.fg_colour,bg=self.bg_colour) ; self.durbin_watson_test_statistic.config(font=("Open Sans",10)) ; self.durbin_watson_test_statistic.grid(column=1,row=16)
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
