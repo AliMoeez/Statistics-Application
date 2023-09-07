@@ -371,7 +371,7 @@ class MultipleRegression(Home):
 
     def testing_window_labels(self):
         if self.dropdown_test_options_logic[1][1]:
-            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=200)
+            self.holder_label=Label(self.SCREEN_TEST,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.holder_label.grid(column=0,row=0,padx=175)
             self.title_label=Label(self.SCREEN_TEST,text="Multiple Regression Output",fg=self.fg_colour,bg=self.bg_colour) ; self.title_label.configure(font=("Open Sans",25)) ; self.title_label.grid(column=1,row=0,pady=25)
             self.regression_f_p_values_label=Label(self.SCREEN_TEST,text="Regression F-Value & p-value (Test For All Beteas <> 0)",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values_label.config(font=("Open Sans",10,'bold')) ; self.regression_f_p_values_label.grid(column=1,row=3) 
             self.regression_equation_label=Label(self.SCREEN_TEST,text="Regression Equation",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_equation_label.config(font=("Open Sans",10,'bold')) ; self.regression_equation_label.grid(column=1,row=5) 
@@ -409,7 +409,7 @@ class MultipleRegression(Home):
             self.identities=np.identity(len(self.regression_ols.params)) ; self.identities=self.identities[1:,:] ; self.reg_f_test=self.regression_ols.f_test(self.identities)    
             dir(self.reg_f_test) ; self.f_value=self.reg_f_test.fvalue ; self.p_value=self.reg_f_test.pvalue
             self.regression_f_p_values=Label(self.SCREEN_TEST,text=f"F-Value = {round(self.f_value,4)} -- p-value = {round(self.p_value,4)}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_f_p_values.config(font=("Open Sans",10)) ; self.regression_f_p_values.grid(column=1,row=4)
-            self.reg_params=[] ; self.reg_p_value_list=[]
+            self.reg_params=[] ; self.reg_p_value_list=[] ; self.col_list_ci=[]
             for idx in self.regression_ols.params: self.reg_params.append(str(round(idx,4)))
             for idx,parameter in enumerate(self.reg_params):
                 if idx==0: self.reg_params[idx]=f"{parameter}"
@@ -427,14 +427,12 @@ class MultipleRegression(Home):
             self.regression_beta_r_squared=Label(self.SCREEN_TEST,text=self.reg_r_2,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_beta_r_squared.config(font=("Open Sans",10)) ; self.regression_beta_r_squared.grid(column=1,row=10)
             self.regression_se=str(round(self.regression_ols.bse,4).to_dict())[1:-1]
             self.regression_se_shown=Label(self.SCREEN_TEST,text=self.regression_se,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_se_shown.config(font=("Open Sans",10)) ; self.regression_se_shown.grid(column=1,row=12)
-
-            self.regression_confidence_interval=self.regression_ols.conf_int(float(self.alpha_level_entry.get()))
-            self.regression_confidence_interval_list=round(self.regression_confidence_interval,4).values.tolist()
-            for idx in self.regression_confidence_interval_list:
-                idx.insert(0,self.reg_params[idx])
-            self.regression_confidence_interval_string=str(self.regression_confidence_interval_list)[1:-1]
-            self.regression_confidence_interval_string=self.regression_confidence_interval_string.replace("["," ")
-            self.regression_confidence_interval_string-self.regression_confidence_interval_string.replace("]"," ")
+            self.regression_confidence_interval=self.regression_ols.conf_int(float(self.alpha_level_entry.get())) ; self.regression_confidence_interval_list=round(self.regression_confidence_interval,4).values.tolist()
+            for col in self.data: self.col_list_ci.append(col)
+            self.col_list_ci[0]='const'
+            for idx,list_of_list in enumerate(self.regression_confidence_interval_list): list_of_list.insert(0,self.col_list_ci[idx])
+            self.regression_confidence_interval_string=str(self.regression_confidence_interval_list)[1:-1] 
+            self.regression_confidence_interval_string=self.regression_confidence_interval_string.replace("["," ") ; self.regression_confidence_interval_string=self.regression_confidence_interval_string.replace("]"," ")
             self.regression_confidcen_interval_statistics=Label(self.SCREEN_TEST,text=f"{self.regression_confidence_interval_string}",fg=self.fg_colour,bg=self.bg_colour) ; self.regression_confidcen_interval_statistics.config(font=("Open Sans",10)) ; self.regression_confidcen_interval_statistics.grid(column=1,row=14)
             self.durbin_watson_stat=round(st.durbin_watson(self.regression_ols.resid),4)
             self.durbin_watson_check=""
@@ -442,6 +440,9 @@ class MultipleRegression(Home):
             elif self.durbin_watson_stat>2.3: self.durbin_watson_check="Signs of Negative Serial Correlation In The Error Terms"
             else: self.durbin_watson_check="No Signs of Serial Correlation In The Error Terms"
             self.durbin_watson_test_statistic=Label(self.SCREEN_TEST,text=f"{self.durbin_watson_stat} -- {self.durbin_watson_check}",fg=self.fg_colour,bg=self.bg_colour) ; self.durbin_watson_test_statistic.config(font=("Open Sans",10)) ; self.durbin_watson_test_statistic.grid(column=1,row=16)
+            if self.p_value>0.05: self.p_value_text=f"p({round(self.p_value,4)}) > alpha(0.05) ,  it means that this model is not a good predictor of the dependent variable"
+            else : self.p_value_text=f"p({round(self.p_value,4)}) <= alpha(0.05) , it means that this model may be a good predictor of the dependent variable"
+            self.regression_conclusion_label=Label(self.SCREEN_TEST,text=self.p_value_text,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_conclusion_label.config(font=("Open Sans",10)) ; self.regression_conclusion_label.grid(column=1,row=17)
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()

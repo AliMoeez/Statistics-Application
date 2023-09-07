@@ -35,18 +35,29 @@ combine="  ".join(list_2)
 #print(f"y = {combine}")
 
 
-print(st.durbin_watson(reg.resid))
+#print(st.durbin_watson(reg.resid))
 
 #print(reg.summary())
 
 
 reg_ci=reg.conf_int(0.05)
 
+list_4=[]
+
+for col in df:
+    list_4.append(col)
+
+list_4[0]="const"
+
+#print(list_4)
 #print(reg_ci)
 test=(round(reg_ci,4).values.tolist())
 
-for i in test:
-    i.insert(0,"HERE")    
+#print(test)
+for i,y in enumerate(test):
+     print(type(y))
+     y.insert(0,list_4[i])
+
 
 test_2=str(test)[1:-1]
 
