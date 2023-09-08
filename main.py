@@ -70,7 +70,7 @@ class Home:
         self.string.set(self.dropdown_test_options[0])
 
     def next_step(self):        
-        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self),TTest.next_step_window(self),MultipleRegression.next_step_window(self)]) 
+        self.next_button=Button(SCREEN,text="Next",bg=self.bg_colour,fg=self.fg_colour,command=lambda:[Home.confirmation_button(self),LinearRegression.next_step_window(self),TTest.next_step_window(self),MultipleRegression.next_step_window(self),ARIMA.next_step_window(self)]) 
         self.next_button.grid(column=1,row=10,pady=20)
 
 class LinearRegression(Home):
@@ -444,6 +444,42 @@ class MultipleRegression(Home):
             else : self.p_value_text=f"p({round(self.p_value,4)}) <= alpha(0.05) , it means that this model may be a good predictor of the dependent variable"
             self.regression_conclusion_label=Label(self.SCREEN_TEST,text=self.p_value_text,fg=self.fg_colour,bg=self.bg_colour) ; self.regression_conclusion_label.config(font=("Open Sans",10)) ; self.regression_conclusion_label.grid(column=1,row=17)
 
+class ARIMA(Home):
+    def __init__(self):
+        super().__init__(file_label,data,data_label,string,dropdown_test_options_logic)
+        self.dropdown_test_options_logic=dropdown_test_options_logic
+
+    def next_step_window(self):
+        if self.dropdown_test_options_logic[3][1]:
+            self.SCREEN_POPUP=Tk() ; self.SCREEN_POPUP.geometry("600x250") ; self.SCREEN_POPUP.config(bg=self.bg_colour) ; self.SCREEN_POPUP.title("ARIMA Settings") ; self.SCREEN_POPUP.resizable(False,False)
+            ARIMA.next_step_window_labels(self)
+            ARIMA.next_step_window_entries(self)
+            ARIMA.next_step_run(self)
+
+    def next_step_window_labels(self):
+        if self.dropdown_test_options_logic[3][1]:
+            self.blank_label=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=75)
+            self.ARIMA_pop_up_title=Label(self.SCREEN_POPUP,text="ARIMA Settings",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18)) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+            self.data_use_label=Label(self.SCREEN_POPUP,text="Column Name In Which Non-Time Data Is Stored",fg=self.fg_colour,bg=self.bg_colour)  ; self.data_use_label.config(font=("Open Sans",10)) ; self.data_use_label.grid(column=1,row=1,pady=5)
+            self.ARIMA_d_label=Label(self.SCREEN_POPUP,text="ARIMA(d)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_d_label.config(font=("Open Sans",10)) ; self.ARIMA_d_label.grid(column=1,row=3,pady=5)
+                                     
+    def next_step_window_entries(self):
+        if self.dropdown_test_options_logic[3][1]:
+            self.data_use_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.data_use_entry.grid(column=1,row=2)
+            self.ARIMA_d=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_d.grid(column=1,row=4)
+
+    def next_step_window_data_validation(self):
+        if self.dropdown_test_options_logic[3][1]:
+            for col in self.data:
+                if self.data_use_entry.get()==col and int(self.ARIMA_d.get()):
+                    print("YES")
+
+    def next_step_run(self):
+        if self.dropdown_test_options_logic[3][1]:     
+            self.next_step_run_button=Button(self.SCREEN_POPUP,text="Next",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.next_step_window_data_validation(self)])
+            self.next_step_run_button.grid(column=1,row=5,pady=10)
+
+
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
 home.data_organization()
@@ -474,5 +510,9 @@ mulreg.next_step_window_checkbox()
 mulreg.next_step_window_labels()
 mulreg.get_entry_values()
 mulreg.run()
+
+arima=ARIMA()
+arima.next_step_window()
+arima.next_step_run()
 
 SCREEN.mainloop()
