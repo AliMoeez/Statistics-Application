@@ -469,15 +469,21 @@ class ARIMA(Home):
             self.ARIMA_d=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_d.grid(column=1,row=4)
 
     def next_step_window_data_validation(self):
+        global ARIMA_model
         if self.dropdown_test_options_logic[3][1]:
             for col in self.data:
                 if self.data_use_entry.get()==col and int(self.ARIMA_d.get()):
-                    print("YES")
+                    ARIMA_model=True
 
     def next_step_run(self):
         if self.dropdown_test_options_logic[3][1]:     
-            self.next_step_run_button=Button(self.SCREEN_POPUP,text="Next",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.next_step_window_data_validation(self)])
+            self.next_step_run_button=Button(self.SCREEN_POPUP,text="Next",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.next_step_window_data_validation(self),ARIMA.intermediatry_screen(self)])
             self.next_step_run_button.grid(column=1,row=5,pady=10)
+
+    def intermediatry_screen(self):
+        global ARIMA_model
+        if self.dropdown_test_options_logic[3][1] and ARIMA_model:
+            self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("600x250") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
@@ -514,5 +520,6 @@ mulreg.run()
 arima=ARIMA()
 arima.next_step_window()
 arima.next_step_run()
+arima.intermediatry_screen()
 
 SCREEN.mainloop()
