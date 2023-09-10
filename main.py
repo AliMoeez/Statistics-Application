@@ -483,7 +483,34 @@ class ARIMA(Home):
     def intermediatry_screen(self):
         global ARIMA_model
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
-            self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("600x250") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
+            self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x450") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
+            ARIMA.intermediatry_screen_labels(self)
+            ARIMA.intermediatry_screen_graphs(self)
+
+    def intermediatry_screen_labels(self):
+        self.blank_label=Label(self.SCREEN_SETTINGS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=75)
+        self.ARIMA_pop_up_title=Label(self.SCREEN_SETTINGS,text="ARIMA Graphs (Dataset, ACF,PACF)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18)) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+    
+
+    def intermediatry_screen_graphs(self):
+        self.figure_plot=plt.Figure(figsize=(7,4),dpi=100)
+        self.figure_num=self.figure_plot.add_subplot(131)
+        self.figure_num.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+
+        self.figure_nums=self.figure_plot.add_subplot(132)
+        self.figure_nums.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+
+        self.figure_nums=self.figure_plot.add_subplot(133)
+        self.figure_nums.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+
+        self.figure_show=FigureCanvasTkAgg(self.figure_plot,master=self.SCREEN_SETTINGS)
+        self.figure_show.get_tk_widget().grid(column=1,row=1)
+    #    self.toolbar=NavigationToolbar2Tk(self.figure_regression,self.SCREEN_TEST,pack_toolbar=False,)
+    #    self.toolbar.grid(column=1,row=2,pady=10)
+
+
+
+
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
