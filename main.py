@@ -6,6 +6,10 @@ from tkinter import *
 from tkinter import filedialog
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 from scipy.stats import ttest_ind, ttest_rel
+from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.graphics.tsaplots import plot_predict
 
 SCREEN=Tk()
 
@@ -460,30 +464,34 @@ class ARIMA(Home):
         if self.dropdown_test_options_logic[3][1]:
             self.blank_label=Label(self.SCREEN_POPUP,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=75)
             self.ARIMA_pop_up_title=Label(self.SCREEN_POPUP,text="ARIMA Settings",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18)) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
-            self.data_use_label=Label(self.SCREEN_POPUP,text="Column Name In Which Non-Time Data Is Stored",fg=self.fg_colour,bg=self.bg_colour)  ; self.data_use_label.config(font=("Open Sans",10)) ; self.data_use_label.grid(column=1,row=1,pady=5)
-            self.ARIMA_d_label=Label(self.SCREEN_POPUP,text="ARIMA(d)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_d_label.config(font=("Open Sans",10)) ; self.ARIMA_d_label.grid(column=1,row=3,pady=5)
+            self.time_use_label=Label(self.SCREEN_POPUP,text="Column Name In Which Time Data Is Stored",fg=self.fg_colour,bg=self.bg_colour)  ; self.time_use_label.config(font=("Open Sans",10)) ; self.time_use_label.grid(column=1,row=1,pady=5)
+            self.data_use_label=Label(self.SCREEN_POPUP,text="Column Name In Which Non-Time Data Is Stored",fg=self.fg_colour,bg=self.bg_colour)  ; self.data_use_label.config(font=("Open Sans",10)) ; self.data_use_label.grid(column=1,row=3,pady=5)
+            self.ARIMA_d_label=Label(self.SCREEN_POPUP,text="ARIMA(d)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_d_label.config(font=("Open Sans",10)) ; self.ARIMA_d_label.grid(column=1,row=5,pady=5)
                                      
     def next_step_window_entries(self):
         if self.dropdown_test_options_logic[3][1]:
-            self.data_use_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.data_use_entry.grid(column=1,row=2)
-            self.ARIMA_d=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_d.grid(column=1,row=4)
+            self.time_use_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.time_use_entry.grid(column=1,row=2)
+            self.data_use_entry=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.data_use_entry.grid(column=1,row=4)
+            self.ARIMA_d=Entry(self.SCREEN_POPUP,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_d.grid(column=1,row=6)
 
     def next_step_window_data_validation(self):
         global ARIMA_model
         if self.dropdown_test_options_logic[3][1]:
-            for col in self.data:
-                if self.data_use_entry.get()==col and int(self.ARIMA_d.get()):
-                    ARIMA_model=True
+            self.list_col=[]
+            for col in self.data: self.list_col.append(col)
+            if self.data_use_entry.get() in self.list_col and self.time_use_entry.get() in self.list_col and int(self.ARIMA_d.get()):
+                if self.data_use_entry.get()!=self.time_use_entry.get():
+                    if self.data_use_entry.get()!=self.time_use_entry.get(): ARIMA_model=True
 
     def next_step_run(self):
         if self.dropdown_test_options_logic[3][1]:     
             self.next_step_run_button=Button(self.SCREEN_POPUP,text="Next",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.next_step_window_data_validation(self),ARIMA.intermediatry_screen(self)])
-            self.next_step_run_button.grid(column=1,row=5,pady=10)
+            self.next_step_run_button.grid(column=1,row=7,pady=10)
 
     def intermediatry_screen(self):
         global ARIMA_model
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
-            self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x450") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
+            self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x750") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
             ARIMA.intermediatry_screen_labels(self)
             ARIMA.intermediatry_screen_graphs(self)
 
@@ -493,25 +501,24 @@ class ARIMA(Home):
     
 
     def intermediatry_screen_graphs(self):
-        self.figure_plot=plt.Figure(figsize=(7,4),dpi=100)
+        plt.style.use("dark_background")
+        self.figure_plot=plt.Figure(figsize=(7,4))
         self.figure_num=self.figure_plot.add_subplot(131)
-        self.figure_num.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+        self.figure_num.plot(self.data[self.time_use_entry.get()],self.data[self.data_use_entry.get()])
 
         self.figure_nums=self.figure_plot.add_subplot(132)
-        self.figure_nums.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+        self.figure_nums.plot(data=plot_acf(self.data[self.data_use_entry.get()]))
 
         self.figure_nums=self.figure_plot.add_subplot(133)
-        self.figure_nums.plot(self.data["Time"],self.data[self.data_use_entry.get()])
+        self.figure_nums.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
+
+
+        self.figure_plot.subplots_adjust(wspace=0.3)
 
         self.figure_show=FigureCanvasTkAgg(self.figure_plot,master=self.SCREEN_SETTINGS)
         self.figure_show.get_tk_widget().grid(column=1,row=1)
-    #    self.toolbar=NavigationToolbar2Tk(self.figure_regression,self.SCREEN_TEST,pack_toolbar=False,)
-    #    self.toolbar.grid(column=1,row=2,pady=10)
-
-
-
-
-
+        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_SETTINGS,pack_toolbar=False,)
+        self.toolbar.grid(column=1,row=2,pady=10)
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()

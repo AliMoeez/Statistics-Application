@@ -9,13 +9,17 @@ from statsmodels.graphics.tsaplots import plot_predict
 df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 
 #x=plt.plot(df["Time"],df["Data"])
-plt.ylabel("Y")
-plt.xlabel("X")
+#plt.ylabel("Y")
+#plt.xlabel("X")
 
 #acf=plot_acf(df["Data"])
 #pacf=plot_pacf(df["Data"])
 
-adfuller_test=adfuller(df["Data"])
+plt.plot(data=plot_acf(df["Data"]))
+
+plt.show()
+
+"""adfuller_test=adfuller(df["Data"])
 
 print(adfuller_test[1]) #>0.05 --> that non-stationary 
 
@@ -39,5 +43,5 @@ df["Data"].plot(ax=ax[2])
 
 plot_predict(arima_model_fit,55,115,ax=ax[2])
 
-plt.show()
+plt.show()"""
 
