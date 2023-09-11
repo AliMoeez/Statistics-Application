@@ -493,6 +493,7 @@ class ARIMA(Home):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
             self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x750") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
             ARIMA.intermediatry_screen_labels(self)
+            ARIMA.intermediatry_screen_destroy(self)
             ARIMA.intermediatry_screen_graphs(self)
 
     def intermediatry_screen_labels(self):
@@ -506,12 +507,11 @@ class ARIMA(Home):
         self.figure_num=self.figure_plot.add_subplot(131)
         self.figure_num.plot(self.data[self.time_use_entry.get()],self.data[self.data_use_entry.get()])
 
-        self.figure_nums=self.figure_plot.add_subplot(132)
-        self.figure_nums.plot(data=plot_acf(self.data[self.data_use_entry.get()]))
-
-        self.figure_nums=self.figure_plot.add_subplot(133)
-        self.figure_nums.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
-
+       # self.figure_num=self.figure_plot.add_subplot(111)
+        self.figure_num.plot(data=plot_acf(self.data[self.data_use_entry.get()]))
+    
+       # self.figure_num=self.figure_plot.add_subplot(133)
+        self.figure_num.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
 
         self.figure_plot.subplots_adjust(wspace=0.3)
 
@@ -519,6 +519,13 @@ class ARIMA(Home):
         self.figure_show.get_tk_widget().grid(column=1,row=1)
         self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_SETTINGS,pack_toolbar=False,)
         self.toolbar.grid(column=1,row=2,pady=10)
+        plt.show()
+      
+    def intermediatry_screen_destroy(self):
+        if self.dropdown_test_options_logic[3][1] and ARIMA_model:
+            self.destory_screen=Button(self.SCREEN_SETTINGS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=self.SCREEN_SETTINGS.destroy)
+            self.destory_screen.grid(column=1,row=3)
+
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
 home.text()
@@ -555,5 +562,6 @@ arima=ARIMA()
 arima.next_step_window()
 arima.next_step_run()
 arima.intermediatry_screen()
+arima.intermediatry_screen_destroy()
 
 SCREEN.mainloop()

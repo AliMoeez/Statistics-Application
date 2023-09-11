@@ -5,6 +5,14 @@ from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.graphics.tsaplots import plot_predict
+from tkinter import *
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+
+x=False
+
+SCREEN=Tk()
+
+SCREEN.geometry("1200x800") ; SCREEN.config(bg="gray0") ; SCREEN.title("Statistics Application") ; SCREEN.resizable(False,False)
 
 df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 
@@ -15,9 +23,24 @@ df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 #acf=plot_acf(df["Data"])
 #pacf=plot_pacf(df["Data"])
 
-plt.plot(data=plot_acf(df["Data"]))
 
+figure_plot=plt.Figure(figsize=(7,4))
+     #   self.figure_num=self.figure_plot.add_subplot(131)
+     #   self.figure_num.plot(self.data[self.time_use_entry.get()],self.data[self.data_use_entry.get()])
+
+figure_num=figure_plot.add_subplot(121)
+figure_num.plot(data=plot_acf(df["Data"]))
+#figure_num.margins(100)
+
+figure_num=figure_plot.add_subplot(122)
+figure_num.plot(df["Time"],df["Data"])
+
+figure_show=FigureCanvasTkAgg(figure_plot,master=SCREEN)
+figure_show.get_tk_widget().grid(column=1,row=1)
+toolbar=NavigationToolbar2Tk(figure_show,SCREEN,pack_toolbar=False,)
+toolbar.grid(column=1,row=2,pady=10)
 plt.show()
+
 
 """adfuller_test=adfuller(df["Data"])
 
@@ -44,4 +67,6 @@ df["Data"].plot(ax=ax[2])
 plot_predict(arima_model_fit,55,115,ax=ax[2])
 
 plt.show()"""
+
+SCREEN.mainloop()
 
