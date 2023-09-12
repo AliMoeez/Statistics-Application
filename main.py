@@ -493,38 +493,37 @@ class ARIMA(Home):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
             self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x750") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
             ARIMA.intermediatry_screen_labels(self)
+            ARIMA.intermediatry_screen_statistics(self)
             ARIMA.intermediatry_screen_destroy(self)
             ARIMA.intermediatry_screen_graphs(self)
 
     def intermediatry_screen_labels(self):
-        self.blank_label=Label(self.SCREEN_SETTINGS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=75)
+        self.blank_label=Label(self.SCREEN_SETTINGS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155)
         self.ARIMA_pop_up_title=Label(self.SCREEN_SETTINGS,text="ARIMA Graphs (Dataset, ACF,PACF)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18)) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+        self.adfuller_label=Label(self.SCREEN_SETTINGS,text="Adfuller Test P-Value",fg=self.fg_colour,bg=self.bg_colour)  ; self.adfuller_label.config(font=("Open Sans",10)) ; self.adfuller_label.grid(column=1,row=4)
     
-
     def intermediatry_screen_graphs(self):
         plt.style.use("dark_background")
-        self.figure_plot=plt.Figure(figsize=(7,4))
-        self.figure_num=self.figure_plot.add_subplot(131)
+        self.figure_plot=plt.Figure(figsize=(5,4)) ; self.figure_num=self.figure_plot.add_subplot(111)
         self.figure_num.plot(self.data[self.time_use_entry.get()],self.data[self.data_use_entry.get()])
-
-       # self.figure_num=self.figure_plot.add_subplot(111)
-        self.figure_num.plot(data=plot_acf(self.data[self.data_use_entry.get()]))
-    
-       # self.figure_num=self.figure_plot.add_subplot(133)
-        self.figure_num.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
-
-        self.figure_plot.subplots_adjust(wspace=0.3)
-
-        self.figure_show=FigureCanvasTkAgg(self.figure_plot,master=self.SCREEN_SETTINGS)
-        self.figure_show.get_tk_widget().grid(column=1,row=1)
-        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_SETTINGS,pack_toolbar=False,)
-        self.toolbar.grid(column=1,row=2,pady=10)
+        self.figure_num.plot(data=plot_acf(self.data[self.data_use_entry.get()])) ; self.figure_num.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
+        self.figure_show=FigureCanvasTkAgg(self.figure_plot,master=self.SCREEN_SETTINGS) ; self.figure_show.get_tk_widget().grid(column=1,row=1)
+        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_SETTINGS,pack_toolbar=False,) ; self.toolbar.grid(column=1,row=2,pady=10)
         plt.show()
-      
+
+    def intermediatry_screen_statistics(self):
+        self.adfuller_test=adfuller(self.data[self.data_use_entry.get()])
+        self.adfuller_test_p_value=round(self.adfuller_test[1],4)
+        self.adfuller_test_label=Label(self.SCREEN_SETTINGS,text=f"{self.adfuller_test_p_value}",fg=self.fg_colour,bg=self.bg_colour) ; self.adfuller_test_label.config(font=("Open Sans",10)) ; self.adfuller_test_label.grid(column=1,row=5)
+        if self.adfuller_test_p_value<=0.05:
+            self.adfuller_test_decision="Since the Adfuller p-value is <=0.05, the Time Series is Stationary"
+        else:
+            self.adfuller_test_decision="Since the Adfuller p-value is >0.05, the Time Series is Non-Stationary. Further differencing may be required."
+        self.adfuller_test_decision_label=Label(self.SCREEN_SETTINGS,text=f"{self.adfuller_test_decision}",fg=self.fg_colour,bg=self.bg_colour) ; self.adfuller_test_decision_label.config(font=("Open Sans",10)) ; self.adfuller_test_decision_label.grid(column=1,row=6)
+
     def intermediatry_screen_destroy(self):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
-            self.destory_screen=Button(self.SCREEN_SETTINGS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=self.SCREEN_SETTINGS.destroy)
-            self.destory_screen.grid(column=1,row=3)
+            self.destory_screen=Button(self.SCREEN_SETTINGS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[self.SCREEN_SETTINGS.destroy(),plt.close('all')]) ; self.destory_screen.grid(column=1,row=3)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)

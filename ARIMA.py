@@ -20,8 +20,8 @@ df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 #plt.ylabel("Y")
 #plt.xlabel("X")
 
-#acf=plot_acf(df["Data"])
-#pacf=plot_pacf(df["Data"])
+acf=plot_acf(df["Data"])
+pacf=plot_pacf(df["Data"])
 
 
 figure_plot=plt.Figure(figsize=(7,4))
