@@ -493,21 +493,27 @@ class ARIMA(Home):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
             self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x750") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
             if int(self.ARIMA_d.get())>0: 
-                self.new_data=self.data[self.data_use_entry.get()].diff(int(self.ARIMA_d.get())).dropna()
-                self.new_time_data=self.data[self.time_use_entry.get()][:-int(self.ARIMA_d.get())]
+                self.new_data=self.data[self.data_use_entry.get()].diff(int(self.ARIMA_d.get())).dropna() ; self.new_time_data=self.data[self.time_use_entry.get()][:-int(self.ARIMA_d.get())]
             else: 
-                self.new_data=self.data[self.data_use_entry.get()]
-                self.new_time_data=self.data[self.time_use_entry.get()]
+                self.new_data=self.data[self.data_use_entry.get()] ; self.new_time_data=self.data[self.time_use_entry.get()]
             ARIMA.intermediatry_screen_labels(self)
+            ARIMA.intermediatry_screen_entries(self)
             ARIMA.intermediatry_screen_statistics(self)
             ARIMA.intermediatry_screen_destroy(self)
+            ARIMA.intermediatry_screen_arima_run(self)
             ARIMA.intermediatry_screen_graphs(self)
 
     def intermediatry_screen_labels(self):
-        self.blank_label=Label(self.SCREEN_SETTINGS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155)
-        self.ARIMA_pop_up_title=Label(self.SCREEN_SETTINGS,text="ARIMA Graphs (Dataset, ACF,PACF)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18)) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
-        self.adfuller_label=Label(self.SCREEN_SETTINGS,text="Adfuller Test P-Value",fg=self.fg_colour,bg=self.bg_colour)  ; self.adfuller_label.config(font=("Open Sans",10)) ; self.adfuller_label.grid(column=1,row=4)
-    
+        self.blank_label=Label(self.SCREEN_SETTINGS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155),
+        self.ARIMA_pop_up_title=Label(self.SCREEN_SETTINGS,text="ARIMA Graphs (Dataset, ACF,PACF)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18,'bold')) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+        self.adfuller_label=Label(self.SCREEN_SETTINGS,text="Adfuller Test P-Value",fg=self.fg_colour,bg=self.bg_colour)  ; self.adfuller_label.config(font=("Open Sans",10,'bold')) ; self.adfuller_label.grid(column=1,row=4)
+        self.ARIMA_p_label=Label(self.SCREEN_SETTINGS,text="ARIMA(p)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_p_label.config(font=("Open Sans",10,'bold')) ; self.ARIMA_p_label.grid(column=1,row=7)
+        self.ARIMA_q_label=Label(self.SCREEN_SETTINGS,text="ARIMA(q)",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_q_label.config(font=("Open Sans",10,'bold')) ; self.ARIMA_q_label.grid(column=1,row=9)
+
+    def intermediatry_screen_entries(self):
+        self.ARIMA_p_entry=Entry(self.SCREEN_SETTINGS,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_p_entry.grid(column=1,row=8)
+        self.ARIMA_q_entry=Entry(self.SCREEN_SETTINGS,fg=self.fg_colour,bg=self.bg_colour) ; self.ARIMA_q_entry.grid(column=1,row=10)
+
     def intermediatry_screen_graphs(self):
         plt.style.use("dark_background")
         self.figure_plot=plt.Figure(figsize=(5,4)) ; self.figure_num=self.figure_plot.add_subplot(111)
@@ -530,6 +536,17 @@ class ARIMA(Home):
     def intermediatry_screen_destroy(self):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
             self.destory_screen=Button(self.SCREEN_SETTINGS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[self.SCREEN_SETTINGS.destroy(),plt.close('all')]) ; self.destory_screen.grid(column=1,row=3)
+
+    def intermediatry_screen_arima_validation(self):
+        if self.dropdown_test_options_logic[3][1]and ARIMA_model:
+            if int(self.ARIMA_p_entry.get()) and int(self.ARIMA_q_entry.get()):
+                print("HERE")
+    
+    def intermediatry_screen_arima_run(self):
+        if self.dropdown_test_options_logic[3][1]and ARIMA_model:
+            self.run_arima=Button(self.SCREEN_SETTINGS,text="Run ARIMA",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.intermediatry_screen_arima_validation(self),plt.close('all')]) ; self.run_arima.grid(column=1,row=11,pady=10)
+
+
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
