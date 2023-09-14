@@ -492,6 +492,12 @@ class ARIMA(Home):
         global ARIMA_model
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
             self.SCREEN_SETTINGS=Tk() ; self.SCREEN_SETTINGS.geometry("1100x750") ; self.SCREEN_SETTINGS.config(bg=self.bg_colour) ; self.SCREEN_SETTINGS.title("ARIMA Settings") ; self.SCREEN_SETTINGS.resizable(False,False)
+            if int(self.ARIMA_d.get())>0: 
+                self.new_data=self.data[self.data_use_entry.get()].diff(int(self.ARIMA_d.get())).dropna()
+                self.new_time_data=self.data[self.time_use_entry.get()][:-int(self.ARIMA_d.get())]
+            else: 
+                self.new_data=self.data[self.data_use_entry.get()]
+                self.new_time_data=self.data[self.time_use_entry.get()]
             ARIMA.intermediatry_screen_labels(self)
             ARIMA.intermediatry_screen_statistics(self)
             ARIMA.intermediatry_screen_destroy(self)
@@ -505,14 +511,14 @@ class ARIMA(Home):
     def intermediatry_screen_graphs(self):
         plt.style.use("dark_background")
         self.figure_plot=plt.Figure(figsize=(5,4)) ; self.figure_num=self.figure_plot.add_subplot(111)
-        self.figure_num.plot(self.data[self.time_use_entry.get()],self.data[self.data_use_entry.get()])
-        self.figure_num.plot(data=plot_acf(self.data[self.data_use_entry.get()])) ; self.figure_num.plot(data=plot_pacf(self.data[self.data_use_entry.get()]))
+        self.figure_num.plot(self.new_time_data,self.new_data)
+        self.figure_num.plot(data=plot_acf(self.new_data)) ; self.figure_num.plot(data=plot_pacf(self.new_data))
         self.figure_show=FigureCanvasTkAgg(self.figure_plot,master=self.SCREEN_SETTINGS) ; self.figure_show.get_tk_widget().grid(column=1,row=1)
         self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_SETTINGS,pack_toolbar=False,) ; self.toolbar.grid(column=1,row=2,pady=10)
         plt.show()
 
     def intermediatry_screen_statistics(self):
-        self.adfuller_test=adfuller(self.data[self.data_use_entry.get()])
+        self.adfuller_test=adfuller(self.new_data)
         self.adfuller_test_p_value=round(self.adfuller_test[1],4)
         self.adfuller_test_label=Label(self.SCREEN_SETTINGS,text=f"{self.adfuller_test_p_value}",fg=self.fg_colour,bg=self.bg_colour) ; self.adfuller_test_label.config(font=("Open Sans",10)) ; self.adfuller_test_label.grid(column=1,row=5)
         if self.adfuller_test_p_value<=0.05:

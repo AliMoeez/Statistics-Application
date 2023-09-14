@@ -10,13 +10,22 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 
 x=False
 
-SCREEN=Tk()
+#SCREEN=Tk()
 
-SCREEN.geometry("1200x800") ; SCREEN.config(bg="gray0") ; SCREEN.title("Statistics Application") ; SCREEN.resizable(False,False)
+#SCREEN.geometry("1200x800") ; SCREEN.config(bg="gray0") ; SCREEN.title("Statistics Application") ; SCREEN.resizable(False,False)
 
 df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 
-#x=plt.plot(df["Time"],df["Data"])
+#df_diff=df["Data"].diff().dropna()
+
+df_diff=df["Data"].diff(2).dropna()
+
+df_new=df["Time"][:-2]
+
+
+print(len(df_new))
+print(len(df_diff))
+"""#x=plt.plot(df["Time"],df["Data"])
 #plt.ylabel("Y")
 #plt.xlabel("X")
 
@@ -39,7 +48,7 @@ figure_show=FigureCanvasTkAgg(figure_plot,master=SCREEN)
 figure_show.get_tk_widget().grid(column=1,row=1)
 toolbar=NavigationToolbar2Tk(figure_show,SCREEN,pack_toolbar=False,)
 toolbar.grid(column=1,row=2,pady=10)
-plt.show()
+plt.show()"""
 
 
 """adfuller_test=adfuller(df["Data"])
@@ -68,5 +77,5 @@ plot_predict(arima_model_fit,55,115,ax=ax[2])
 
 plt.show()"""
 
-SCREEN.mainloop()
+#SCREEN.mainloop()
 
