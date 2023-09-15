@@ -20,11 +20,8 @@ df=pd.read_csv(r"C:\Users\Owner\Desktop\Data_Set_4 - Sheet1.csv")
 
 df_diff=df["Data"].diff(2).dropna()
 
-df_new=df["Time"][:-2]
+#df_new=df["Time"][:-2]
 
-
-print(len(df_new))
-print(len(df_diff))
 """#x=plt.plot(df["Time"],df["Data"])
 #plt.ylabel("Y")
 #plt.xlabel("X")
@@ -51,7 +48,7 @@ toolbar.grid(column=1,row=2,pady=10)
 plt.show()"""
 
 
-"""adfuller_test=adfuller(df["Data"])
+adfuller_test=adfuller(df["Data"])
 
 print(adfuller_test[1]) #>0.05 --> that non-stationary 
 
@@ -65,17 +62,20 @@ arima_model_fit.summary()
 
 residuals=arima_model_fit.resid[1:]
 
-fig,ax=plt.subplots(1,3)
-residuals.plot(ax=ax[0]) #white noise reisudal are good
-residuals.plot(kind="kde",ax=ax[1]) # normally distributied resudals arfe good with meam approxlmetly 0
+
+
+
+fig,sax=plt.subplots(1,3)
+residuals.plot(ax=sax[0]) #white noise reisudal are good
+residuals.plot(kind="kde",ax=sax[1]) # normally distributied resudals arfe good with meam approxlmetly 0
 
 forecast_ts=arima_model_fit.forecast(len(df["Data"]))
 
-df["Data"].plot(ax=ax[2])
+df["Data"].plot(ax=sax[2])
 
-plot_predict(arima_model_fit,55,115,ax=ax[2])
+plot_predict(arima_model_fit,55,115,ax=sax[2])
 
-plt.show()"""
+plt.show()
 
 #SCREEN.mainloop()
 

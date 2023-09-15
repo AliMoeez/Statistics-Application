@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationTool
 from scipy.stats import ttest_ind, ttest_rel
 from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
 from statsmodels.tsa.stattools import adfuller
-from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.arima.model import ARIMA as ARIMA_out
 from statsmodels.graphics.tsaplots import plot_predict
 
 SCREEN=Tk()
@@ -20,7 +20,7 @@ file_label="" ; data="" ; data_label="" ; string="TEST" ; dropdown_test_options_
 line_reg_model=False
 mult_reg_model=False
 ttest_model=False
-ARIMA_model=False
+ARIMA_model=False ; ARIMA_final=False
 
 show_linear_regression=False
 show_ttest=False
@@ -481,7 +481,7 @@ class ARIMA(Home):
             for col in self.data: self.list_col.append(col)
             if self.data_use_entry.get() in self.list_col and self.time_use_entry.get() in self.list_col and int(self.ARIMA_d.get()):
                 if self.data_use_entry.get()!=self.time_use_entry.get():
-                    if self.data_use_entry.get()!=self.time_use_entry.get(): ARIMA_model=True
+                    ARIMA_model=True
 
     def next_step_run(self):
         if self.dropdown_test_options_logic[3][1]:     
@@ -538,15 +538,49 @@ class ARIMA(Home):
             self.destory_screen=Button(self.SCREEN_SETTINGS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[self.SCREEN_SETTINGS.destroy(),plt.close('all')]) ; self.destory_screen.grid(column=1,row=3)
 
     def intermediatry_screen_arima_validation(self):
+        global ARIMA_final
         if self.dropdown_test_options_logic[3][1]and ARIMA_model:
             if int(self.ARIMA_p_entry.get()) and int(self.ARIMA_q_entry.get()):
-                print("HERE")
+                ARIMA_final=True
     
     def intermediatry_screen_arima_run(self):
-        if self.dropdown_test_options_logic[3][1]and ARIMA_model:
-            self.run_arima=Button(self.SCREEN_SETTINGS,text="Run ARIMA",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.intermediatry_screen_arima_validation(self),plt.close('all')]) ; self.run_arima.grid(column=1,row=11,pady=10)
+        if self.dropdown_test_options_logic[3][1] and ARIMA_model:
+            self.run_arima=Button(self.SCREEN_SETTINGS,text="Run ARIMA",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.intermediatry_screen_arima_validation(self),ARIMA.model(self),plt.close('all')]) ; self.run_arima.grid(column=1,row=11,pady=10)
 
+    def model(self):
+        if self.dropdown_test_options_logic[3][1] and ARIMA_model and ARIMA_final:
+            self.SCREEN_STATISTICS=Tk() ; self.SCREEN_STATISTICS.geometry("1100x750") ; self.SCREEN_STATISTICS.config(bg=self.bg_colour) ; self.SCREEN_STATISTICS.title("ARIMA Resutls") ; self.SCREEN_STATISTICS.resizable(False,False)
+            ARIMA.model_labels(self)
+            ARIMA.model_statistics(self)
+            ARIMA.model_destroy(self)
+            ARIMA.model_graphs(self)
 
+    def model_labels(self):
+        self.blank_label=Label(self.SCREEN_STATISTICS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155),
+        self.ARIMA_pop_up_title=Label(self.SCREEN_STATISTICS,text="ARIMA Results",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18,'bold')) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+   
+    def model_graphs(self):
+        plt.style.use("dark_background")
+        self.arima_final_figure=plt.Figure(figsize=(5,4))
+        ax=self.arima_final_figure.subplots(1,3)
+        self.arima_residuals.plot(ax=ax[0])
+        self.arima_residuals.plot(kind='kde',ax=ax[1])
+        self.plot_forecast.plot(ax=ax[2])
+       # self.arima_final_subplot=self.arima_final_figure.subplots(122)
+       # self.arima_forecast_graph=plot_predict(self.arima_output,55,115)
+       # self.arima_final_subplot.plot(data=self.arima_forecast_graph)
+        plt.show()
+        self.figure_show=FigureCanvasTkAgg(self.arima_final_figure,master=self.SCREEN_STATISTICS) ; self.figure_show.get_tk_widget().grid(column=1,row=1)
+        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_STATISTICS,pack_toolbar=False,) ; self.toolbar.grid(column=1,row=2,pady=10)#
+
+    def model_destroy(self):
+        pass
+
+    def model_statistics(self):
+        self.arima_output=ARIMA_out(self.new_data,order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get()))).fit()
+        self.arima_residuals=self.arima_output.resid[1:]
+        self.arima_forecast_time_series=self.arima_output.forecast(len(self.new_data))
+        self.plot_forecast=plot_predict(self.arima_output,55,115)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
@@ -585,5 +619,6 @@ arima.next_step_window()
 arima.next_step_run()
 arima.intermediatry_screen()
 arima.intermediatry_screen_destroy()
+arima.model()
 
 SCREEN.mainloop()
