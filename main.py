@@ -545,7 +545,7 @@ class ARIMA(Home):
     
     def intermediatry_screen_arima_run(self):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model:
-            self.run_arima=Button(self.SCREEN_SETTINGS,text="Run ARIMA",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.intermediatry_screen_arima_validation(self),ARIMA.model(self),plt.close('all')]) ; self.run_arima.grid(column=1,row=11,pady=10)
+            self.run_arima=Button(self.SCREEN_SETTINGS,text="Run ARIMA",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[ARIMA.intermediatry_screen_arima_validation(self),ARIMA.model(self)]) ; self.run_arima.grid(column=1,row=11,pady=10)
 
     def model(self):
         if self.dropdown_test_options_logic[3][1] and ARIMA_model and ARIMA_final:
@@ -554,33 +554,37 @@ class ARIMA(Home):
             ARIMA.model_statistics(self)
             ARIMA.model_destroy(self)
             ARIMA.model_graphs(self)
+            ARIMA.model_graph_forecast(self)
 
     def model_labels(self):
         self.blank_label=Label(self.SCREEN_STATISTICS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155),
         self.ARIMA_pop_up_title=Label(self.SCREEN_STATISTICS,text="ARIMA Results",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18,'bold')) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
    
     def model_graphs(self):
-        plt.style.use("dark_background")
-        self.arima_final_figure=plt.Figure(figsize=(5,4))
-        ax=self.arima_final_figure.subplots(1,3)
+        self.arima_final_figure=plt.Figure(figsize=(6,4))
+        ax=self.arima_final_figure.subplots(1,2)
         self.arima_residuals.plot(ax=ax[0])
         self.arima_residuals.plot(kind='kde',ax=ax[1])
-        self.plot_forecast.plot(ax=ax[2])
-       # self.arima_final_subplot=self.arima_final_figure.subplots(122)
-       # self.arima_forecast_graph=plot_predict(self.arima_output,55,115)
-       # self.arima_final_subplot.plot(data=self.arima_forecast_graph)
-        plt.show()
         self.figure_show=FigureCanvasTkAgg(self.arima_final_figure,master=self.SCREEN_STATISTICS) ; self.figure_show.get_tk_widget().grid(column=1,row=1)
-        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_STATISTICS,pack_toolbar=False,) ; self.toolbar.grid(column=1,row=2,pady=10)#
+        self.toolbar=NavigationToolbar2Tk(self.figure_show,self.SCREEN_STATISTICS,pack_toolbar=False,) ; self.toolbar.grid(column=1,row=2,pady=10)
+
+    def model_graph_forecast(self):
+        plt.style.use("dark_background")
+        self.forecast_figure=plt.Figure(figsize=(5,4))
+        fig,ax,index=self.forecast_figure.add_subplot(1,1,1)
+        self.data[self.data_use_entry.get()].plot(ax=ax[0])
+        plot_predict(self.arima_shown,55,115,ax=ax[0])
+        plt.show()
 
     def model_destroy(self):
         pass
 
     def model_statistics(self):
-        self.arima_output=ARIMA_out(self.new_data,order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get()))).fit()
-        self.arima_residuals=self.arima_output.resid[1:]
-        self.arima_forecast_time_series=self.arima_output.forecast(len(self.new_data))
-        self.plot_forecast=plot_predict(self.arima_output,55,115)
+        self.arima_output=ARIMA_out(self.new_data,order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get())))
+        self.arima_shown=self.arima_output.fit()
+        self.arima_residuals=self.arima_shown.resid[1:]
+      #  self.arima_forecast_time_series=self.arima_output.forecast(len(self.new_data))
+      #  self.plot_forecast=plot_predict(self.arima_output,55,115)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)
