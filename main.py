@@ -570,7 +570,7 @@ class ARIMA(Home):
 
     def model_graph_forecast(self):
         plt.style.use("dark_background")
-        fig,ax=plt.subplots(1,2,figsize=(10,5))
+        fig,ax=plt.subplots(1,2,figsize=(12,5))
         fig.subplots_adjust(left=0.348,bottom=0.11,right=1,top=0.867,wspace=0,hspace=0.202)
         ax[1].set_visible(False)
         self.data[self.data_use_entry.get()].plot(ax=ax[0])
