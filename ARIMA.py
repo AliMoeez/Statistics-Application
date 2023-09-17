@@ -7,6 +7,7 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.graphics.tsaplots import plot_predict
 from tkinter import *
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
+import matplotlib.gridspec as gridspec
 
 x=False
 
@@ -56,7 +57,7 @@ df_diff=df["Data"].diff().dropna() # diffrernce data to remove non-stationarity
 
 #df_diff.plot()
 
-arima_model_shown=ARIMA(df["Data"],order=(1,1,1))
+"""arima_model_shown=ARIMA(df["Data"],order=(1,1,1))
 arima_model_fit=arima_model_shown.fit()
 arima_model_fit.summary()
 
@@ -77,5 +78,23 @@ plot_predict(arima_model_fit,55,115,ax=sax[2])
 
 plt.show()
 
-#SCREEN.mainloop()
+SCREEN.mainloop()"""
+
+arima_model_shown=ARIMA(df["Data"],order=(1,1,1))
+arima_model_fit=arima_model_shown.fit()
+
+fig,ax=plt.subplots(1,2)
+ax[1].set_visible(False)
+df["Data"].plot(ax=ax[0])
+plot_predict(arima_model_fit,55,115,ax=ax[0])
+
+plt.show()
+
+
+
+
+
+
+
+
 

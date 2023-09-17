@@ -570,8 +570,9 @@ class ARIMA(Home):
 
     def model_graph_forecast(self):
         plt.style.use("dark_background")
-        self.forecast_figure=plt.Figure(figsize=(5,4))
-        fig,ax,index=self.forecast_figure.add_subplot(1,1,1)
+        fig,ax=plt.subplots(1,2)
+        fig.subplots_adjust(left=0.348,bottom=0.11,right=1,top=0.867,wspace=0,hspace=0.202)
+        ax[1].set_visible(False)
         self.data[self.data_use_entry.get()].plot(ax=ax[0])
         plot_predict(self.arima_shown,55,115,ax=ax[0])
         plt.show()
@@ -580,7 +581,7 @@ class ARIMA(Home):
         pass
 
     def model_statistics(self):
-        self.arima_output=ARIMA_out(self.new_data,order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get())))
+        self.arima_output=ARIMA_out(self.data[self.data_use_entry.get()],order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get())))
         self.arima_shown=self.arima_output.fit()
         self.arima_residuals=self.arima_shown.resid[1:]
       #  self.arima_forecast_time_series=self.arima_output.forecast(len(self.new_data))
