@@ -10,6 +10,7 @@ from statsmodels.graphics.tsaplots import plot_acf,plot_pacf
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima.model import ARIMA as ARIMA_out
 from statsmodels.graphics.tsaplots import plot_predict
+from sklearn.metrics import mean_squared_error,mean_absolute_error,mean_absolute_percentage_error
 
 SCREEN=Tk()
 
@@ -559,9 +560,14 @@ class ARIMA(Home):
     def model_labels(self):
         self.blank_label=Label(self.SCREEN_STATISTICS,text="",fg=self.fg_colour,bg=self.bg_colour) ; self.blank_label.grid(column=0,row=0,padx=155),
         self.ARIMA_pop_up_title=Label(self.SCREEN_STATISTICS,text="ARIMA Results",fg=self.fg_colour,bg=self.bg_colour)  ; self.ARIMA_pop_up_title.config(font=("Open Sans",18,'bold')) ; self.ARIMA_pop_up_title.grid(column=1,row=0)
+        self.mse_label=Label(self.SCREEN_STATISTICS,text="MSE",fg=self.fg_colour,bg=self.bg_colour)  ; self.mse_label.config(font=("Open Sans",10,'bold')) ; self.mse_label.grid(column=1,row=4)
+        self.mae_label=Label(self.SCREEN_STATISTICS,text="MAE",fg=self.fg_colour,bg=self.bg_colour)  ; self.mae_label.config(font=("Open Sans",10,'bold')) ; self.mae_label.grid(column=1,row=6)
+        self.mape_label=Label(self.SCREEN_STATISTICS,text="MAPE",fg=self.fg_colour,bg=self.bg_colour)  ; self.mape_label.config(font=("Open Sans",10,'bold')) ; self.mape_label.grid(column=1,row=8)
+
    
     def model_graphs(self):
         self.arima_final_figure=plt.Figure(figsize=(6,4))
+        self.arima_final_figure.subplots_adjust(left=0.071,wspace=0.374)
         ax=self.arima_final_figure.subplots(1,2)
         self.arima_residuals.plot(ax=ax[0])
         self.arima_residuals.plot(kind='kde',ax=ax[1])
@@ -578,14 +584,22 @@ class ARIMA(Home):
         plt.show()
 
     def model_destroy(self):
-        pass
+        self.model_destroy_button=Button(self.SCREEN_STATISTICS,text="Return To Previous Step",fg=self.fg_colour,bg=self.bg_colour,command=lambda:[self.SCREEN_STATISTICS.destroy(),plt.close('all')])
+        self.model_destroy_button.grid(column=1,row=3)
 
     def model_statistics(self):
         self.arima_output=ARIMA_out(self.data[self.data_use_entry.get()],order=(int(self.ARIMA_p_entry.get()),int(self.ARIMA_d.get()),int(self.ARIMA_q_entry.get())))
         self.arima_shown=self.arima_output.fit()
         self.arima_residuals=self.arima_shown.resid[1:]
-      #  self.arima_forecast_time_series=self.arima_output.forecast(len(self.new_data))
-      #  self.plot_forecast=plot_predict(self.arima_output,55,115)
+        self.arima_forecast_time_series=self.arima_shown.forecast(len(self.data[self.data_use_entry.get()]))
+
+        self.mse=round(mean_squared_error(self.data[self.data_use_entry.get()],self.arima_forecast_time_series),4)
+        self.mae=round(mean_absolute_error(self.data[self.data_use_entry.get()],self.arima_forecast_time_series),4)
+        self.mape=round(mean_absolute_percentage_error(self.data[self.data_use_entry.get()],self.arima_forecast_time_series),4)
+
+        self.mse_shown=Label(self.SCREEN_STATISTICS,text=f"{self.mse}",fg=self.fg_colour,bg=self.bg_colour)  ; self.mse_shown.config(font=("Open Sans",10)) ; self.mse_shown.grid(column=1,row=5)
+        self.mae_shown=Label(self.SCREEN_STATISTICS,text=f"{self.mae}",fg=self.fg_colour,bg=self.bg_colour)  ; self.mae_shown.config(font=("Open Sans",10)) ; self.mae_shown.grid(column=1,row=7)
+        self.mape_shown=Label(self.SCREEN_STATISTICS,text=f"{self.mape}",fg=self.fg_colour,bg=self.bg_colour)  ; self.mape_shown.config(font=("Open Sans",10)) ; self.mape_shown.grid(column=1,row=9)
 
 
 home=Home(file_label,data,data_label,string,dropdown_test_options_logic)

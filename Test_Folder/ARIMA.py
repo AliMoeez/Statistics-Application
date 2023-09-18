@@ -8,6 +8,7 @@ from statsmodels.graphics.tsaplots import plot_predict
 from tkinter import *
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk)
 import matplotlib.gridspec as gridspec
+from sklearn.metrics import mean_squared_error,mean_absolute_error,mean_absolute_percentage_error
 
 x=False
 
@@ -87,6 +88,14 @@ fig,ax=plt.subplots(1,2)
 ax[1].set_visible(False)
 df["Data"].plot(ax=ax[0])
 plot_predict(arima_model_fit,55,115,ax=ax[0])
+
+forecast_ts=arima_model_fit.forecast(len(df["Data"]))
+
+mse=mean_squared_error(df["Data"],forecast_ts)
+mae=mean_absolute_error(df["Data"],forecast_ts)
+mape=mean_absolute_percentage_error(df["Data"],forecast_ts)
+
+print(mse,mae,mape)
 
 plt.show()
 
