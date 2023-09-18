@@ -87,15 +87,14 @@ arima_model_fit=arima_model_shown.fit()
 fig,ax=plt.subplots(1,2)
 ax[1].set_visible(False)
 df["Data"].plot(ax=ax[0])
-plot_predict(arima_model_fit,55,115,ax=ax[0])
+plot_predict(arima_model_fit,len(df["Data"])-(len(df["Data"])//4),len(df["Data"])+(len(df["Data"])//4),ax=ax[0])
 
+print(len(df["Data"])+(len(df["Data"])//3))
 forecast_ts=arima_model_fit.forecast(len(df["Data"]))
 
 mse=mean_squared_error(df["Data"],forecast_ts)
 mae=mean_absolute_error(df["Data"],forecast_ts)
 mape=mean_absolute_percentage_error(df["Data"],forecast_ts)
-
-print(mse,mae,mape)
 
 plt.show()
 

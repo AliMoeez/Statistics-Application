@@ -580,7 +580,7 @@ class ARIMA(Home):
         fig.subplots_adjust(left=0.348,bottom=0.11,right=1,top=0.867,wspace=0,hspace=0.202)
         ax[1].set_visible(False)
         self.data[self.data_use_entry.get()].plot(ax=ax[0])
-        plot_predict(self.arima_shown,55,115,ax=ax[0])
+        plot_predict(self.arima_shown,len(self.data[self.data_use_entry.get()])-(len(self.data[self.data_use_entry.get()])//3),len(self.data[self.data_use_entry.get()])+len(self.data[self.data_use_entry.get()])//3,ax=ax[0])
         plt.show()
 
     def model_destroy(self):
