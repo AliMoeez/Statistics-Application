@@ -2,7 +2,7 @@
 
  The Statistics Application can take input from a CSV or XLSX file and can run several statistical computations on the file. 
 
- 
+ The Statistics Application uses various python libraires such as numpy,pandas,matplotlib,sklearn,scipy,statsmodel and tkinter! 
  
  These statistics are
  
