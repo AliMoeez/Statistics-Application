@@ -1,6 +1,8 @@
  Statistics-Application
 
  The Statistics Application can take input from a CSV or XLSX file and can run several statistical computations on the file. 
+
+ 
  
  These statistics are
  
@@ -8,7 +10,7 @@
    
    -> Multiple Regression
    
-   -> Studnet T-Tests
+   -> Student T-Tests
    
   -> ARIMA
 
@@ -38,10 +40,13 @@ ARIMA:
 
 ![image](https://github.com/AliMoeez/Statistics-Application/assets/77748153/cc77294b-4985-4f16-856f-88cd0ac84ebb)
 
+![image](https://github.com/AliMoeez/Statistics-Application/assets/77748153/7789a495-5d5e-4b5d-9547-b0b989450d66)
+
 
 ![image](https://github.com/AliMoeez/Statistics-Application/assets/77748153/37479823-5102-484c-956a-f1cf72ac5028)
 
-![image](https://github.com/AliMoeez/Statistics-Application/assets/77748153/0d97c234-55a9-4ea1-8f7b-94cbb141bd00)
+![image](https://github.com/AliMoeez/Statistics-Application/assets/77748153/eb43d03f-36cc-41a3-8949-ca8a193ad2ea)
+
 
 
 
