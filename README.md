@@ -14,7 +14,7 @@
    
   -> ARIMA
 
-  Below are pictures of the statistics application in action!
+  Below are pictures of the Statistics Application in action!
 
   Main Menu:
 
